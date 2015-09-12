@@ -1,0 +1,77 @@
+* Explain each line of code:
+    // Includes the functions in the iostream library (from the standard library)
+    // Provides functionality like printing out to the console
+    #include <iostream>
+
+    // Let the compiler know we are using functions and variables from the
+    // std namespace. Basically allows us to not have to write "std::" in
+    // front of all the functions and classes from the std namespace
+    using namespace std;
+
+    // Defines the main function, that takes two parameters (the number of
+    // command line arguments, and then an array of char* (strings) with
+    // the actual command line arguments). This is the main entry point
+    int main(int argc, char *argv[])
+    {
+        // Calls the function myFunction with 10 as the parameter 'n'. Assigns
+        // the value returned by myFunction to p
+        int p = myFunction(10);
+
+        // Prints out the value of p to the output stream (most likely the console)
+        cout << p << endl;
+    }
+
+    // Defines a function named myFunction that takes in an integer parameter
+    // (named n) and after it does its processing, it returns a double (floating
+    // point value)
+    double myFunction(int n)
+    {
+        // Declare 4 unsigned integers, with the i variable being
+        // initialized to 0, and the j variable being initialized to 1.
+        // The t and k variables are left uninitialized
+        unsigned int i = 0, j = 1, t, k;
+
+        // Create a loop using the k variable declared above
+        // This will loop n + 1 times, incrementing the k variable
+        // each loop iteration
+        for (k=0; k <= n; ++k)
+        {
+            // Add the value of i and j together and assign
+            // the result to the variable t
+            t = i + j;
+
+            // Assign the value of j to i, overwriting what was in i
+            i = j;
+
+            // Assign the value of t (which was i + j above) to j
+            j = t;
+        }
+
+        // Return the value of j to the calling function
+        return j;
+    }
+
+* What is the error?
+    The issue is that the function myFunction is used before it is defined, so
+    the compiler doesn't know about it when it is used. This causes it to fail
+    compilation. To fix this, either move the myFunction function above the
+    main function, or add a prototype (just the function definition) before
+    the main function.
+
+    Not necessarily an error, but an oddity is that the function myFunction
+    has a return type of double, but it actually returns an int, and is used
+    as an int. There isn't really anything wrong with this, but just odd.
+
+* What is the overall functionality?
+    It computes the Fibonacci number at a given n in the sequence. The n provided
+    to the function will provide the n + 2 Fibonacci number.
+
+    myFunction(0) = 1       // 1st and 2nd Fibonacci numbers
+    myFunction(1) = 2       // 3rd Fibonacci number
+    myFunction(2) = 3       // 4th Fibonacci number
+    myFunction(3) = 5       // 5th Fibonacci number
+    ...
+    myFunction(10) = 144    // 12th Fibonacci number
+
+* What is the value of p after myFunction?
+    144
