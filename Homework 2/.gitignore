@@ -5,3 +5,11 @@ p1/CMakeScripts
 p1/Makefile
 p1/cmake_install.cmake
 p1/install_manifest.txt
+
+p2/HW2P2
+p2/CMakeCache.txt
+p2/CMakeFiles
+p2/CMakeScripts
+p2/Makefile
+p2/cmake_install.cmake
+p2/install_manifest.txt
