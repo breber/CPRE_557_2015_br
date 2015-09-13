@@ -56,7 +56,9 @@ static const string fs_string  =
 "                                                               \n"
 "void main(void)                                                \n"
 "{                                                              \n"
-"    color = vec4(pass_Color, 1.0);                             \n"
+// TODO: Something isn't being passed right in pass_Color
+"     color = vec4(0.0, 0.0, 1.0, 1.0);                         \n"
+// "    color = vec4(pass_Color, 1.0);                             \n"
 "}                                                              \n";
 
 /// Camera control matrices
@@ -72,6 +74,9 @@ GLuint program;
 
 // USE THESE vertex array objects to define your objects
 unsigned int vaoID[2];
+unsigned int vboID[4]; // Our Vertex Buffer Object
+
+const unsigned int VERTICES = 17;
 
 /*
     Create the model using triangle strips
@@ -79,6 +84,74 @@ unsigned int vaoID[2];
 unsigned int createTriangleStripModel()
 {
     // TODO: use the vertex array object vaoID[0] for this model representation
+
+    float vertices[VERTICES * 3] = { 0.0 };  // Vertices for our square
+    float colors[VERTICES * 3] = { 0.0 };    // Colors for our vertices
+
+    for (int i = 0; i < VERTICES; ++i) {
+        // colors[i] = 0.0;
+        // colors[i + 1] = 0.0;
+        colors[i + 2] = 1.0;
+    }
+
+    unsigned int i = 0;
+
+    // Bottom rectangular shape
+    // Front
+    vertices[i++] = 0.0; vertices[i++] = 0.0; vertices[i++] = 0.0;      // LBF
+    vertices[i++] = 0.0; vertices[i++] = 1.0; vertices[i++] = 0.0;      // LTF
+    vertices[i++] = 3.0; vertices[i++] = 0.0; vertices[i++] = 0.0;      // RBF
+    vertices[i++] = 3.0; vertices[i++] = 1.0; vertices[i++] = 0.0;      // RTF
+
+    // Right
+    vertices[i++] = 3.0; vertices[i++] = 0.0; vertices[i++] = -1.0;     // RBB
+    vertices[i++] = 3.0; vertices[i++] = 1.0; vertices[i++] = -1.0;     // RTB
+
+    // Back
+    vertices[i++] = 0.0; vertices[i++] = 0.0; vertices[i++] = -1.0;     // LBB
+    vertices[i++] = 0.0; vertices[i++] = 1.0; vertices[i++] = -1.0;     // LTB
+
+    // Left
+    vertices[i++] = 0.0; vertices[i++] = 0.0; vertices[i++] = 0.0;      // LBF
+    vertices[i++] = 0.0; vertices[i++] = 1.0; vertices[i++] = 0.0;      // LTF
+
+    // Top
+    vertices[i++] = 0.0; vertices[i++] = 1.0; vertices[i++] = -1.0;     // LTB
+    vertices[i++] = 3.0; vertices[i++] = 1.0; vertices[i++] = 0.0;      // RTF
+    vertices[i++] = 3.0; vertices[i++] = 1.0; vertices[i++] = -1.0;     // RTB
+
+    // Bottom
+    vertices[i++] = 3.0; vertices[i++] = 0.0; vertices[i++] = -1.0;     // RBB
+    vertices[i++] = 0.0; vertices[i++] = 0.0; vertices[i++] = -1.0;     // LBB
+    vertices[i++] = 3.0; vertices[i++] = 0.0; vertices[i++] = 0.0;      // RBF
+    vertices[i++] = 0.0; vertices[i++] = 0.0; vertices[i++] = 0.0;      // LBF
+
+    // End bottom rectangular shape
+
+    // Start perpendicular rectangle
+
+    // End perpendicular rectangle
+
+    glGenVertexArrays(2, &vaoID[0]); // Create our Vertex Array Object
+    glBindVertexArray(vaoID[0]); // Bind our Vertex Array Object so we can use it
+
+    glGenBuffers(2, vboID); // Generate our Vertex Buffer Object
+
+    // vertices
+    glBindBuffer(GL_ARRAY_BUFFER, vboID[0]); // Bind our Vertex Buffer Object
+    glBufferData(GL_ARRAY_BUFFER, VERTICES * 3 * sizeof(GLfloat), vertices, GL_STATIC_DRAW); // Set the size and data of our VBO and set it to STATIC_DRAW
+
+    glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, 0); // Set up our vertex attributes pointer
+    glEnableVertexAttribArray(0); // Disable our Vertex Array Object
+
+    // Color
+    glBindBuffer(GL_ARRAY_BUFFER, vboID[1]); // Bind our second Vertex Buffer Object
+    glBufferData(GL_ARRAY_BUFFER, VERTICES * 3 * sizeof(GLfloat), colors, GL_STATIC_DRAW); // Set the size and data of our VBO and set it to STATIC_DRAW
+
+    glVertexAttribPointer((GLuint)1, 3, GL_FLOAT, GL_FALSE, 0, 0); // Set up our vertex attributes pointer
+    glEnableVertexAttribArray(1); // Enable the second vertex attribute array
+
+    glBindVertexArray(0); // Disable our Vertex Buffer Object
 
     return 1;
 }
@@ -93,14 +166,17 @@ unsigned int createMyModel()
     return 1;
 }
 
-
-
 /*
     Render the triangle strip model
 */
 void renderTriangleStripModel()
 {
-    // TODO
+    // Bind our Vertex Array Object
+    glBindVertexArray(vaoID[0]);
+    // Draw the object as a triangle strip
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, VERTICES);
+    // Unbind our Vertex Array Object
+    glBindVertexArray(0);
 }
 
 /*!
@@ -217,12 +293,17 @@ int main(int argc, const char * argv[])
     while(!glfwWindowShouldClose(window))
     {
         // Clear the entire buffer with our green color (sets the background to be green).
-        glClearBufferfv(GL_COLOR , 0, clear_color);
-        glClearBufferfv(GL_DEPTH , 0, clear_depth);
+        glClearBufferfv(GL_COLOR, 0, clear_color);
+        glClearBufferfv(GL_DEPTH, 0, clear_depth);
 
         // update the virtual camera
         // ignore this line since we did not introduced cameras.
-        updateCamera();
+        // TODO: revert this...just easier to visualize with the rotation
+        // updateCamera();
+        GLfloat radius = 8.0f;
+        GLfloat camX = sin(glfwGetTime()) * radius;
+        GLfloat camZ = cos(glfwGetTime()) * radius;
+        viewMatrix = glm::lookAt(glm::vec3(camX, -5.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
 
         //// Generate the object
         // Enable the shader program
