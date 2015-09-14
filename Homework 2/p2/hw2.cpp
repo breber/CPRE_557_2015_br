@@ -74,84 +74,153 @@ GLuint program;
 
 // USE THESE vertex array objects to define your objects
 unsigned int vaoID[2];
-unsigned int vboID[4]; // Our Vertex Buffer Object
+unsigned int vboID[4];
 
-const unsigned int VERTICES = 17;
+unsigned int TRIANGLE_VERTICES = 0;
+
+#define COUNT(x) sizeof(x) / sizeof(x[0])
 
 /*
     Create the model using triangle strips
 */
 unsigned int createTriangleStripModel()
 {
-    // TODO: use the vertex array object vaoID[0] for this model representation
+    float vertices[] = {
+        // Bottom back rectangular prism
 
-    float vertices[VERTICES * 3] = { 0.0 };  // Vertices for our square
-    float colors[VERTICES * 3] = { 0.0 };    // Colors for our vertices
+        // Front
+        0.0, 0.0, 0.0,      // RBF
+        0.0, 1.0, 0.0,      // RTF
+        -3.0, 0.0, 0.0,     // LBF
+        -3.0, 1.0, 0.0,     // LTF
 
-    for (int i = 0; i < VERTICES; ++i) {
+        // Left
+        -3.0, 0.0, -1.0,    // LBB
+        -3.0, 1.0, -1.0,    // LTB
+
+        // Back
+        0.0, 0.0, -1.0,     // RBB
+        0.0, 1.0, -1.0,     // RTB
+
+        // Right
+        0.0, 0.0, 0.0,      // RBF
+        0.0, 1.0, 0.0,      // RTF
+
+        // Top
+        -3.0, 1.0, 0.0,     // LTF
+        0.0, 1.0, -1.0,     // RTB
+        -3.0, 1.0, -1.0,    // LTB
+
+        // Bottom
+        -3.0, 0.0, -1.0,    // LBB
+        -3.0, 0.0, 0.0,     // LBF
+        0.0, 0.0, -1.0,     // RBB
+        0.0, 0.0, 0.0,      // RBF
+
+        // End bottom back rectangular prism
+
+        // Start vertical rectangular prism
+
+        // Front
+        0.0, 0.0, 0.0,      // RBF
+        0.0, 2.0, 0.0,      // RTF
+        -1.0, 2.0, 0.0,     // LTF
+        -1.0, 0.0, 0.0,     // LBF
+
+        // Left
+        -1.0, 2.0, -1.0,    // LTB
+        -1.0, 0.0, -1.0,    // LBB
+
+        // Back
+        0.0, 2.0, -1.0,     // RTB
+        0.0, 0.0, -1.0,     // RBB
+
+        // Right
+        0.0, 2.0, 0.0,      // RTF
+        0.0, 0.0, 0.0,      // RBF
+
+        // Bottom
+        -1.0, 0.0, 0.0,     // LBF
+        0.0, 0.0, -1.0,     // RBB
+        -1.0, 0.0, -1.0,    // LBB
+
+        // Top
+        0.0, 2.0, -1.0,     // RTB
+        -1.0, 2.0, -1.0,    // LTB
+        0.0, 2.0, 0.0,      // RTF
+        -1.0, 2.0, 0.0,     // LTF
+
+        // End vertical rectangular prism
+
+        // Start triangular prism
+
+        // Top
+        -1.0, 1.0, 2.0,     // LMF
+        0.0, 1.0, 2.0,      // RMF
+        0.0, 2.0, 0.0,      // RTB
+
+        // Right
+        0.0, 0.0, 0.0,      // RBB
+        0.0, 0.0, 2.0,      // RBF
+        0.0, 1.0, 2.0,      // RTF
+
+        // Front
+        -1.0, 0.0, 2.0,     // LBF
+        -1.0, 1.0, 2.0,     // LTF
+
+        // Left
+        -1.0, 0.0, 0.0,     // LBB
+        -1.0, 2.0, 0.0,     // LTB
+
+        // Bottom
+        -1.0, 0.0, 0.0,     // LBB
+        -1.0, 0.0, 2.0,     // LBF
+        0.0, 0.0, 0.0,      // RBB
+        0.0, 0.0, 2.0,      // RBF
+
+        // End triangular prism
+    };
+    TRIANGLE_VERTICES = COUNT(vertices) / 3;
+    float colors[COUNT(vertices)];
+
+    for (int i = 0; i < TRIANGLE_VERTICES; ++i) {
         // colors[i] = 0.0;
         // colors[i + 1] = 0.0;
         colors[i + 2] = 1.0;
     }
 
-    unsigned int i = 0;
+    // Create our Vertex Array Object
+    glGenVertexArrays(2, &vaoID[0]);
+    // Bind our Vertex Array Object so we can use it
+    glBindVertexArray(vaoID[0]);
 
-    // Bottom rectangular shape
-    // Front
-    vertices[i++] = 0.0; vertices[i++] = 0.0; vertices[i++] = 0.0;      // LBF
-    vertices[i++] = 0.0; vertices[i++] = 1.0; vertices[i++] = 0.0;      // LTF
-    vertices[i++] = 3.0; vertices[i++] = 0.0; vertices[i++] = 0.0;      // RBF
-    vertices[i++] = 3.0; vertices[i++] = 1.0; vertices[i++] = 0.0;      // RTF
-
-    // Right
-    vertices[i++] = 3.0; vertices[i++] = 0.0; vertices[i++] = -1.0;     // RBB
-    vertices[i++] = 3.0; vertices[i++] = 1.0; vertices[i++] = -1.0;     // RTB
-
-    // Back
-    vertices[i++] = 0.0; vertices[i++] = 0.0; vertices[i++] = -1.0;     // LBB
-    vertices[i++] = 0.0; vertices[i++] = 1.0; vertices[i++] = -1.0;     // LTB
-
-    // Left
-    vertices[i++] = 0.0; vertices[i++] = 0.0; vertices[i++] = 0.0;      // LBF
-    vertices[i++] = 0.0; vertices[i++] = 1.0; vertices[i++] = 0.0;      // LTF
-
-    // Top
-    vertices[i++] = 0.0; vertices[i++] = 1.0; vertices[i++] = -1.0;     // LTB
-    vertices[i++] = 3.0; vertices[i++] = 1.0; vertices[i++] = 0.0;      // RTF
-    vertices[i++] = 3.0; vertices[i++] = 1.0; vertices[i++] = -1.0;     // RTB
-
-    // Bottom
-    vertices[i++] = 3.0; vertices[i++] = 0.0; vertices[i++] = -1.0;     // RBB
-    vertices[i++] = 0.0; vertices[i++] = 0.0; vertices[i++] = -1.0;     // LBB
-    vertices[i++] = 3.0; vertices[i++] = 0.0; vertices[i++] = 0.0;      // RBF
-    vertices[i++] = 0.0; vertices[i++] = 0.0; vertices[i++] = 0.0;      // LBF
-
-    // End bottom rectangular shape
-
-    // Start perpendicular rectangle
-
-    // End perpendicular rectangle
-
-    glGenVertexArrays(2, &vaoID[0]); // Create our Vertex Array Object
-    glBindVertexArray(vaoID[0]); // Bind our Vertex Array Object so we can use it
-
-    glGenBuffers(2, vboID); // Generate our Vertex Buffer Object
+    // Generate our Vertex Buffer Object
+    glGenBuffers(2, vboID);
 
     // vertices
-    glBindBuffer(GL_ARRAY_BUFFER, vboID[0]); // Bind our Vertex Buffer Object
-    glBufferData(GL_ARRAY_BUFFER, VERTICES * 3 * sizeof(GLfloat), vertices, GL_STATIC_DRAW); // Set the size and data of our VBO and set it to STATIC_DRAW
+    // Bind our Vertex Buffer Object
+    glBindBuffer(GL_ARRAY_BUFFER, vboID[0]);
+    // Set the size and data of our VBO and set it to STATIC_DRAW
+    glBufferData(GL_ARRAY_BUFFER, TRIANGLE_VERTICES * 3 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, 0); // Set up our vertex attributes pointer
-    glEnableVertexAttribArray(0); // Disable our Vertex Array Object
+    // Set up our vertex attributes pointer
+    glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    // Disable our Vertex Array Object
+    glEnableVertexAttribArray(0);
 
     // Color
-    glBindBuffer(GL_ARRAY_BUFFER, vboID[1]); // Bind our second Vertex Buffer Object
-    glBufferData(GL_ARRAY_BUFFER, VERTICES * 3 * sizeof(GLfloat), colors, GL_STATIC_DRAW); // Set the size and data of our VBO and set it to STATIC_DRAW
+    // Bind our second Vertex Buffer Object
+    glBindBuffer(GL_ARRAY_BUFFER, vboID[1]);
+    // Set the size and data of our VBO and set it to STATIC_DRAW
+    glBufferData(GL_ARRAY_BUFFER, TRIANGLE_VERTICES * 3 * sizeof(GLfloat), colors, GL_STATIC_DRAW);
 
-    glVertexAttribPointer((GLuint)1, 3, GL_FLOAT, GL_FALSE, 0, 0); // Set up our vertex attributes pointer
-    glEnableVertexAttribArray(1); // Enable the second vertex attribute array
+    // Set up our vertex attributes pointer
+    glVertexAttribPointer((GLuint)1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    // Enable the second vertex attribute array
+    glEnableVertexAttribArray(1);
 
-    glBindVertexArray(0); // Disable our Vertex Buffer Object
+    // Disable our Vertex Buffer Object
+    glBindVertexArray(0);
 
     return 1;
 }
@@ -174,7 +243,7 @@ void renderTriangleStripModel()
     // Bind our Vertex Array Object
     glBindVertexArray(vaoID[0]);
     // Draw the object as a triangle strip
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, VERTICES);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, TRIANGLE_VERTICES);
     // Unbind our Vertex Array Object
     glBindVertexArray(0);
 }
