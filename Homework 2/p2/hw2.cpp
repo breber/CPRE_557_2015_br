@@ -27,6 +27,9 @@
 
 using namespace std;
 
+// Calculate the number of items in a statically defined array
+#define COUNT(x) (sizeof(x) / sizeof(x[0]))
+
 static const string vs_string =
 "#version 410 core                                              \n"
 "                                                               \n"
@@ -56,9 +59,7 @@ static const string fs_string  =
 "                                                               \n"
 "void main(void)                                                \n"
 "{                                                              \n"
-// TODO: Something isn't being passed right in pass_Color
-"     color = vec4(0.0, 0.0, 1.0, 1.0);                         \n"
-// "    color = vec4(pass_Color, 1.0);                             \n"
+"    color = vec4(pass_Color, 1.0);                             \n"
 "}                                                              \n";
 
 /// Camera control matrices
@@ -74,17 +75,19 @@ GLuint program;
 
 // USE THESE vertex array objects to define your objects
 unsigned int vaoID[2];
-unsigned int vboID[4];
 
-unsigned int TRIANGLE_VERTICES = 0;
-
-#define COUNT(x) sizeof(x) / sizeof(x[0])
+// Triangle Strip VBO and coordinate count
+unsigned int vboTriangles[2];
+unsigned int triangleStripCount = 0;
 
 /*
     Create the model using triangle strips
 */
 unsigned int createTriangleStripModel()
 {
+    // Some portions of some faces are included in multiple triangles,
+    // due to the ordering of the triangle vertices, and the use of a
+    // single triangle strip
     float vertices[] = {
         // Bottom back rectangular prism
 
@@ -180,12 +183,12 @@ unsigned int createTriangleStripModel()
 
         // End triangular prism
     };
-    TRIANGLE_VERTICES = COUNT(vertices) / 3;
-    float colors[COUNT(vertices)];
+    triangleStripCount = COUNT(vertices);
+    float colors[triangleStripCount];
 
-    for (int i = 0; i < TRIANGLE_VERTICES; ++i) {
-        // colors[i] = 0.0;
-        // colors[i + 1] = 0.0;
+    for (int i = 0; i < triangleStripCount; i += 3) {
+        colors[i] = 0.0;
+        colors[i + 1] = 0.0;
         colors[i + 2] = 1.0;
     }
 
@@ -195,13 +198,13 @@ unsigned int createTriangleStripModel()
     glBindVertexArray(vaoID[0]);
 
     // Generate our Vertex Buffer Object
-    glGenBuffers(2, vboID);
+    glGenBuffers(2, vboTriangles);
 
     // vertices
     // Bind our Vertex Buffer Object
-    glBindBuffer(GL_ARRAY_BUFFER, vboID[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, vboTriangles[0]);
     // Set the size and data of our VBO and set it to STATIC_DRAW
-    glBufferData(GL_ARRAY_BUFFER, TRIANGLE_VERTICES * 3 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, triangleStripCount * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
 
     // Set up our vertex attributes pointer
     glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -210,9 +213,95 @@ unsigned int createTriangleStripModel()
 
     // Color
     // Bind our second Vertex Buffer Object
-    glBindBuffer(GL_ARRAY_BUFFER, vboID[1]);
+    glBindBuffer(GL_ARRAY_BUFFER, vboTriangles[1]);
     // Set the size and data of our VBO and set it to STATIC_DRAW
-    glBufferData(GL_ARRAY_BUFFER, TRIANGLE_VERTICES * 3 * sizeof(GLfloat), colors, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, triangleStripCount * sizeof(GLfloat), colors, GL_STATIC_DRAW);
+
+    // Set up our vertex attributes pointer
+    glVertexAttribPointer((GLuint)1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    // Enable the second vertex attribute array
+    glEnableVertexAttribArray(1);
+
+    // Disable our Vertex Buffer Object
+    glBindVertexArray(0);
+
+    return 1;
+}
+
+unsigned int vboMyModel[2];
+unsigned int myModelCount = 0;
+/*
+    Create the model using other primitives
+*/
+unsigned int createMyModel()
+{
+    float vertices[] = {
+        // Bottom back rectangular prism
+
+        // Front
+        0.0, 0.0, 0.0,      // RBF
+        0.0, 1.0, 0.0,      // RTF
+        -3.0, 0.0, 0.0,     // LBF
+        -3.0, 1.0, 0.0,     // LTF
+
+        // Left
+        -3.0, 0.0, -1.0,    // LBB
+        -3.0, 1.0, -1.0,    // LTB
+
+        // Back
+        0.0, 0.0, -1.0,     // RBB
+        0.0, 1.0, -1.0,     // RTB
+
+        // Right
+        0.0, 0.0, 0.0,      // RBF
+        0.0, 1.0, 0.0,      // RTF
+
+        // Top
+        -3.0, 1.0, 0.0,     // LTF
+        0.0, 1.0, -1.0,     // RTB
+        -3.0, 1.0, -1.0,    // LTB
+
+        // Bottom
+        -3.0, 0.0, -1.0,    // LBB
+        -3.0, 0.0, 0.0,     // LBF
+        0.0, 0.0, -1.0,     // RBB
+        0.0, 0.0, 0.0,      // RBF
+
+        // End bottom back rectangular prism
+    };
+    myModelCount = COUNT(vertices);
+    float colors[myModelCount];
+
+    for (int i = 0; i < myModelCount; i += 3) {
+        colors[i] = 0.0;
+        colors[i + 1] = 1.0;
+        colors[i + 2] = 0.0;
+    }
+
+    // Create our Vertex Array Object
+    glGenVertexArrays(2, &vaoID[1]);
+    // Bind our Vertex Array Object so we can use it
+    glBindVertexArray(vaoID[1]);
+
+    // Generate our Vertex Buffer Object
+    glGenBuffers(2, vboMyModel);
+
+    // vertices
+    // Bind our Vertex Buffer Object
+    glBindBuffer(GL_ARRAY_BUFFER, vboMyModel[0]);
+    // Set the size and data of our VBO and set it to STATIC_DRAW
+    glBufferData(GL_ARRAY_BUFFER, myModelCount * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+
+    // Set up our vertex attributes pointer
+    glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    // Disable our Vertex Array Object
+    glEnableVertexAttribArray(0);
+
+    // Color
+    // Bind our second Vertex Buffer Object
+    glBindBuffer(GL_ARRAY_BUFFER, vboMyModel[1]);
+    // Set the size and data of our VBO and set it to STATIC_DRAW
+    glBufferData(GL_ARRAY_BUFFER, myModelCount * sizeof(GLfloat), colors, GL_STATIC_DRAW);
 
     // Set up our vertex attributes pointer
     glVertexAttribPointer((GLuint)1, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -226,16 +315,6 @@ unsigned int createTriangleStripModel()
 }
 
 /*
-    Create the model using other primitives
-*/
-unsigned int createMyModel()
-{
-    // TODO: use the vertex array object vaoID[1] for this model representation
-
-    return 1;
-}
-
-/*
     Render the triangle strip model
 */
 void renderTriangleStripModel()
@@ -243,7 +322,7 @@ void renderTriangleStripModel()
     // Bind our Vertex Array Object
     glBindVertexArray(vaoID[0]);
     // Draw the object as a triangle strip
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, TRIANGLE_VERTICES);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, triangleStripCount / 3);
     // Unbind our Vertex Array Object
     glBindVertexArray(0);
 }
@@ -253,7 +332,12 @@ void renderTriangleStripModel()
  */
 void renderMyModel()
 {
-    // TODO
+    // Bind our Vertex Array Object
+    glBindVertexArray(vaoID[1]);
+    // Draw the object as a triangle strip
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, myModelCount / 3);
+    // Unbind our Vertex Array Object
+    glBindVertexArray(0);
 }
 
 /*
@@ -368,11 +452,11 @@ int main(int argc, const char * argv[])
         // update the virtual camera
         // ignore this line since we did not introduced cameras.
         // TODO: revert this...just easier to visualize with the rotation
-        // updateCamera();
-        GLfloat radius = 8.0f;
-        GLfloat camX = sin(glfwGetTime()) * radius;
-        GLfloat camZ = cos(glfwGetTime()) * radius;
-        viewMatrix = glm::lookAt(glm::vec3(camX, -5.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+        updateCamera();
+        // GLfloat radius = 8.0f;
+        // GLfloat camX = sin(glfwGetTime()) * radius;
+        // GLfloat camZ = cos(glfwGetTime()) * radius;
+        // viewMatrix = glm::lookAt(glm::vec3(camX, -5.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
 
         //// Generate the object
         // Enable the shader program
