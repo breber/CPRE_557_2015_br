@@ -186,7 +186,11 @@ unsigned int createTriangleStripModel()
     triangleStripCount = COUNT(vertices);
     float colors[triangleStripCount];
 
+    std::cout << __FUNCTION__ << " vertex count: " << COUNT(vertices) << std::endl;
+
     for (int i = 0; i < triangleStripCount; i += 3) {
+        // Move our vertices over in the x direction +1
+        vertices[i] += 1;
         colors[i] = 0.0;
         colors[i + 1] = 0.0;
         colors[i + 2] = 1.0;
@@ -314,10 +318,14 @@ unsigned int createMyModel()
     const unsigned int count = COUNT(vertices);
     float colors[count];
 
+    std::cout << __FUNCTION__ << " vertex count: " << COUNT(vertices) << std::endl;
+
     for (int i = 0; i < count; i += 3) {
+        // Move our vertices over in the x direction +1
+        vertices[i] += 1;
         colors[i] = 0.0;
-        colors[i + 1] = 1.0;
-        colors[i + 2] = 0.0;
+        colors[i + 1] = 0.0;
+        colors[i + 2] = 1.0;
     }
 
     // Create our Vertex Array Object
