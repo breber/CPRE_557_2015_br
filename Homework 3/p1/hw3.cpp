@@ -54,32 +54,37 @@ int main(int argc, const char * argv[])
     GLSpotLightSource light_source;
 
     // First spot light (sharp cutoff angle)
-    // TODO: get the right parameters
-    light_source._lightPos = glm::vec4(10.0, 20.0, 0.0, 0.0);
-    light_source._ambient_intensity = 0.3;
-    light_source._specular_intensity = 5.0;
-    light_source._diffuse_intensity = 8.0;
+    //   * No ambient light
+    //   * Add some specular intensity
+    //   * No diffuse intensity
+    light_source._lightPos = glm::vec4(25.0, 25.0, 0.0, 0.0);
+    light_source._ambient_intensity = 0.0;
+    light_source._specular_intensity = 3.0;
+    light_source._diffuse_intensity = 0.0;
     light_source._attenuation_coeff = 0.02;
 
-    light_source._cone_angle = 12.0; // in degree
+    light_source._cone_angle = 4.0; // in degree
     light_source._cone_direction = glm::vec3(-1.0, -1.0, 0.0); // this must be aligned with the object and light position.
     lights.push_back(light_source);
 
     // Add a diffuse light
-    // TODO: get the right parameters
-    light_source._lightPos = glm::vec4(-10.0, -10.0, 0.0, 1.0);
-    light_source._ambient_intensity = 0.3;
-    light_source._specular_intensity = 10.0;
-    light_source._diffuse_intensity = 4.0;
+    //   * No ambient light
+    //   * No specular intensity
+    //   * Some diffuse intensity
+    light_source._lightPos = glm::vec4(25.0, 0.0, 0.0, 1.0);
+    light_source._ambient_intensity = 0.0;
+    light_source._specular_intensity = 0.0;
+    light_source._diffuse_intensity = 10.0;
     light_source._attenuation_coeff = 0.02;
 
-    light_source._cone_angle = 40.0; // in degree
-    light_source._cone_direction = glm::vec3(-1.0, -1.0, 0.0); // this must be aligned with the object and light position.
-    // lights.push_back(light_source);
+    // No cone angle, since it isn't a spotlight
+    light_source._cone_angle = 0.0;
+    light_source._cone_direction = glm::vec3(-1.0, -1.0, 0.0);
+    lights.push_back(light_source);
 
     // coordinate system
     CoordSystem cs(40.0);
-    CustomSphere sphere(0.0, 0.0, 0.0, 10.0, lights, 40, 20);
+    CustomSphere sphere(0.0, 0.0, 0.0, 10.0, lights, 500, 500);
 
     //// Main render loop
 
