@@ -39,6 +39,122 @@ GLuint program;
 /* A trackball to move and rotate the camera view */
 extern Trackball trackball;
 
+CustomSphere
+build_sphere_1() {
+    std::vector< GLSpotLightSource > lights;
+    GLSpotLightSource light_source;
+
+    // TODO: define lights
+    light_source._lightPos = glm::vec4(25.0, 25.0, 0.0, 0.0);
+    light_source._ambient_intensity = 10.0;
+    light_source._specular_intensity = 0.0;
+    light_source._diffuse_intensity = 0.0;
+    light_source._attenuation_coeff = 0.02;
+
+    light_source._cone_angle = 4.0; // in degree
+    light_source._cone_direction = glm::vec3(-1.0, -1.0, 0.0); // this must be aligned with the object and light position.
+    lights.push_back(light_source);
+
+    return CustomSphere(
+        -20.0,                  // x
+        0.0,                    // y
+        0.0,                    // z
+        5.0,                    // radius
+        lights,                 // the lights to use
+        "../p1/multilight.vs",  // the vertex shader
+        "../p1/multilight.fs",  // the fragment shader
+        50,                     // rows in the model
+        50                      // segments in the model
+    );
+}
+
+CustomSphere
+build_sphere_2() {
+    std::vector< GLSpotLightSource > lights;
+    GLSpotLightSource light_source;
+
+    // TODO: define lights
+    light_source._lightPos = glm::vec4(25.0, 25.0, 0.0, 0.0);
+    light_source._ambient_intensity = 10.0;
+    light_source._specular_intensity = 0.0;
+    light_source._diffuse_intensity = 0.0;
+    light_source._attenuation_coeff = 0.02;
+
+    light_source._cone_angle = 4.0; // in degree
+    light_source._cone_direction = glm::vec3(-1.0, -1.0, 0.0); // this must be aligned with the object and light position.
+    lights.push_back(light_source);
+
+    return CustomSphere(
+        -7.0,                   // x
+        0.0,                    // y
+        0.0,                    // z
+        5.0,                    // radius
+        lights,                 // the lights to use
+        "../p1/multilight.vs",  // the vertex shader
+        "../p1/multilight.fs",  // the fragment shader
+        50,                     // rows in the model
+        50                      // segments in the model
+    );
+}
+
+CustomSphere
+build_sphere_3() {
+    std::vector< GLSpotLightSource > lights;
+    GLSpotLightSource light_source;
+
+    // TODO: define lights
+    light_source._lightPos = glm::vec4(25.0, 25.0, 0.0, 0.0);
+    light_source._ambient_intensity = 10.0;
+    light_source._specular_intensity = 0.0;
+    light_source._diffuse_intensity = 0.0;
+    light_source._attenuation_coeff = 0.02;
+
+    light_source._cone_angle = 4.0; // in degree
+    light_source._cone_direction = glm::vec3(-1.0, -1.0, 0.0); // this must be aligned with the object and light position.
+    lights.push_back(light_source);
+
+    return CustomSphere(
+        7.0,                    // x
+        0.0,                    // y
+        0.0,                    // z
+        5.0,                    // radius
+        lights,                 // the lights to use
+        "../p1/multilight.vs",  // the vertex shader
+        "../p1/multilight.fs",  // the fragment shader
+        50,                     // rows in the model
+        50                      // segments in the model
+    );
+}
+
+CustomSphere
+build_sphere_4() {
+    std::vector< GLSpotLightSource > lights;
+    GLSpotLightSource light_source;
+
+    // TODO: define lights
+    light_source._lightPos = glm::vec4(25.0, 25.0, 0.0, 0.0);
+    light_source._ambient_intensity = 10.0;
+    light_source._specular_intensity = 3.0;
+    light_source._diffuse_intensity = 0.0;
+    light_source._attenuation_coeff = 0.02;
+
+    light_source._cone_angle = 4.0; // in degree
+    light_source._cone_direction = glm::vec3(-1.0, -1.0, 0.0); // this must be aligned with the object and light position.
+    lights.push_back(light_source);
+
+    return CustomSphere(
+        20.0,                   // x
+        0.0,                    // y
+        0.0,                    // z
+        5.0,                    // radius
+        lights,                 // the lights to use
+        "../p1/multilight.vs",  // the vertex shader
+        "../p1/multilight.fs",  // the fragment shader
+        50,                     // rows in the model
+        50                      // segments in the model
+    );
+}
+
 int main(int argc, const char * argv[])
 {
     // Init glfw, create a window, and init glew
@@ -49,52 +165,13 @@ int main(int argc, const char * argv[])
     // Init the glew api
     initGlew();
 
-    // Setup our light sources
-    std::vector< GLSpotLightSource > lights;
-    GLSpotLightSource light_source;
-
-    // First spot light (sharp cutoff angle)
-    //   * No ambient light
-    //   * Add some specular intensity
-    //   * No diffuse intensity
-    light_source._lightPos = glm::vec4(25.0, 25.0, 0.0, 0.0);
-    light_source._ambient_intensity = 0.0;
-    light_source._specular_intensity = 3.0;
-    light_source._diffuse_intensity = 0.0;
-    light_source._attenuation_coeff = 0.02;
-
-    light_source._cone_angle = 4.0; // in degree
-    light_source._cone_direction = glm::vec3(-1.0, -1.0, 0.0); // this must be aligned with the object and light position.
-    lights.push_back(light_source);
-
-    // Add a diffuse light
-    //   * No ambient light
-    //   * No specular intensity
-    //   * Some diffuse intensity
-    light_source._lightPos = glm::vec4(25.0, 0.0, 0.0, 1.0);
-    light_source._ambient_intensity = 0.0;
-    light_source._specular_intensity = 0.0;
-    light_source._diffuse_intensity = 10.0;
-    light_source._attenuation_coeff = 0.02;
-
-    // No cone angle, since it isn't a spotlight
-    light_source._cone_angle = 0.0;
-    light_source._cone_direction = glm::vec3(-1.0, -1.0, 0.0);
-    lights.push_back(light_source);
-
     // coordinate system
     CoordSystem cs(40.0);
-    CustomSphere sphere(
-        0.0,                    // x
-        0.0,                    // y
-        0.0,                    // z
-        10.0,                   // radius
-        lights,                 // the lights to use
-        "../p1/multilight.vs",  // the vertex shader
-        "../p1/multilight.fs",  // the fragment shader
-        500,                    // rows in the model
-        500                     // segments in the model
-    );
+
+    CustomSphere sphere1(build_sphere_1());
+    CustomSphere sphere2(build_sphere_2());
+    CustomSphere sphere3(build_sphere_3());
+    CustomSphere sphere4(build_sphere_4());
 
     //// Main render loop
 
@@ -123,7 +200,10 @@ int main(int argc, const char * argv[])
 
         // draw the objects
         cs.draw();
-        sphere.draw();
+        sphere1.draw();
+        sphere2.draw();
+        sphere3.draw();
+        sphere4.draw();
 
         // Swap the buffers so that what we drew will appear on the screen.
         glfwSwapBuffers(window);
