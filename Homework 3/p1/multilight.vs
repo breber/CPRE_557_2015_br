@@ -47,7 +47,7 @@ void main(void)
     vec4 surfacePostion = modelMatrixBox * vec4(in_Position, 1.0);
     vec3 linearColor = vec3(0.0, 0.0, 0.0);
 
-    // TODO: clean this up and make it actually support multiple lights
+    // Go through the number of lights that the C++ program says there are
     for (int index = 0; index < numLights; index++)
     {
         Light l = lights[index];

@@ -1,6 +1,6 @@
 //
-//  hw3.cpp
-//  Part 1 of HW3
+//  hw3_p2.cpp
+//  Part 2 of HW3
 //
 //  Created by Brian Reber
 //  Copyright (c) 2015 -. All rights reserved.
@@ -84,7 +84,17 @@ int main(int argc, const char * argv[])
 
     // coordinate system
     CoordSystem cs(40.0);
-    CustomSphere sphere(0.0, 0.0, 0.0, 10.0, lights, 500, 500);
+    CustomSphere sphere(
+        0.0,                    // x
+        0.0,                    // y
+        0.0,                    // z
+        10.0,                   // radius
+        lights,                 // the lights to use
+        "../p1/multilight.vs",  // the vertex shader
+        "../p1/multilight.fs",  // the fragment shader
+        500,                    // rows in the model
+        500                     // segments in the model
+    );
 
     //// Main render loop
 

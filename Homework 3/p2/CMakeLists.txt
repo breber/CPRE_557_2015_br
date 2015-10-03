@@ -4,13 +4,14 @@ MESSAGE( STATUS ${CMAKE_SOURCE_DIR})
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/../../cmake")
 set(CLASS_SOURCE_PATH ${CLASS_SOURCE_PATH} "${CMAKE_SOURCE_DIR}/../../HCI-557-CG/gl_common")
 
-foreach(lib hw3_p1.cpp CustomSphere.cpp)
+foreach(lib hw3_p2.cpp ../p1/CustomSphere.cpp)
     file(GLOB TEMP_SOURCE ${lib})
     LIST(APPEND SOURCE ${TEMP_SOURCE})
 endforeach(lib)
 
 # Include files from the class repo
 INCLUDE_DIRECTORIES(${CLASS_SOURCE_PATH})
+INCLUDE_DIRECTORIES(../p1)
 
 foreach(f GLAppearance.cpp Shaders.cpp GLSphere.cpp GLObject.cpp CoordSystem.cpp controls.cpp HCI557Common.cpp)
     file(GLOB TEMP_SOURCE ${CLASS_SOURCE_PATH}/${f})
@@ -18,4 +19,4 @@ foreach(f GLAppearance.cpp Shaders.cpp GLSphere.cpp GLObject.cpp CoordSystem.cpp
 endforeach(f)
 
 include(CreateProject)
-CreateProject("HW3P1" "${SOURCE}")
+CreateProject("HW3P2" "${SOURCE}")

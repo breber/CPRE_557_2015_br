@@ -11,9 +11,13 @@ CustomSphere::CustomSphere(
     float center_z,
     float radius,
     const std::vector< GLSpotLightSource >& lights,
+    const std::string& vertexShader,
+    const std::string& fragmentShader,
     int rows,
     int segments )
     : GLSphere(center_x, center_y, center_z, radius, rows, segments)
+    , _vertexShader(vertexShader)
+    , _fragmentShader(fragmentShader)
     , _numLightsLocation(0)
     , _light_sources()
 {
@@ -40,7 +44,7 @@ CustomSphere::~CustomSphere()
 void
 CustomSphere::initShader()
 {
-    _program = LoadAndCreateShaderProgram("spotlight.vs", "spotlight.fs");
+    _program = LoadAndCreateShaderProgram(_vertexShader, _fragmentShader);
 
     glUseProgram(_program);
 
