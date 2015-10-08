@@ -37,6 +37,9 @@ public:
         const std::vector< GLSpotLightSource >& lights,
         const std::string& vertexShader,
         const std::string& fragmentShader,
+        const glm::vec3& diffuseColor,
+        const glm::vec3& ambientColor,
+        const glm::vec3& specularColor,
         int rows = 10,
         int segments = 10 );
     ~CustomSphere();
@@ -49,6 +52,9 @@ protected:
 
     std::string _vertexShader;
     std::string _fragmentShader;
+    glm::vec3 _diffuseColor;
+    glm::vec3 _ambientColor;
+    glm::vec3 _specularColor;
     int _numLightsLocation;
     // The light objects
     std::vector< GLSpotLightSource > _light_sources;

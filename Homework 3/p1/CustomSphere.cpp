@@ -13,16 +13,22 @@ CustomSphere::CustomSphere(
     const std::vector< GLSpotLightSource >& lights,
     const std::string& vertexShader,
     const std::string& fragmentShader,
+    const glm::vec3& diffuseColor,
+    const glm::vec3& ambientColor,
+    const glm::vec3& specularColor,
     int rows,
     int segments )
     : GLSphere(center_x, center_y, center_z, radius, rows, segments)
     , _vertexShader(vertexShader)
     , _fragmentShader(fragmentShader)
+    , _diffuseColor(diffuseColor)
+    , _ambientColor(ambientColor)
+    , _specularColor(specularColor)
     , _numLightsLocation(0)
     , _light_sources()
 {
     // Only allow 8 light sources
-    for (int i = 0; i < std::min(8UL, lights.size()); ++i) {
+    for (int i = 0; i < std::min(static_cast<size_t>(8UL), lights.size()); ++i) {
         _light_sources.push_back(lights[i]);
     }
 
@@ -60,18 +66,20 @@ CustomSphere::initShader()
     _projectionMatrixLocation = glGetUniformLocation(_program, "projectionMatrixBox"); // Get the location of our projection matrix in the shader
     _viewMatrixLocation = glGetUniformLocation(_program, "viewMatrixBox"); // Get the location of our view matrix in the shader
     _modelMatrixLocation = glGetUniformLocation(_program, "modelMatrixBox"); // Get the location of our model matrix in the shader
+    _inverseViewMatrixLocation = glGetUniformLocation(_program, "inverseViewMatrix");
     _numLightsLocation = glGetUniformLocation(_program, "numLights"); // Get the location of the number of lights
 
     glUniformMatrix4fv(_projectionMatrixLocation, 1, GL_FALSE, &projectionMatrix()[0][0] ); // Send our projection matrix to the shader
     glUniformMatrix4fv(_viewMatrixLocation, 1, GL_FALSE, &viewMatrix()[0][0]); // Send our view matrix to the shader
     glUniformMatrix4fv(_modelMatrixLocation, 1, GL_FALSE, &_modelMatrix[0][0]); // Send our model matrix to the shader
+    glUniformMatrix4fv(_inverseViewMatrixLocation, 1, GL_FALSE, &invRotatedViewMatrix()[0][0]);
     glUniform1i(_numLightsLocation, (GLint)_light_sources.size()); // Send the number of lights
 
     // Material
-    _material._diffuse_material = glm::vec3(1.0, 0.5, 0.0);
-    _material._ambient_material = glm::vec3(1.0, 0.5, 0.0);
-    _material._specular_material = glm::vec3(1.0, 1.0, 1.0);
-    _material._shininess = 0.0;
+    _material._diffuse_material = _diffuseColor;
+    _material._ambient_material = _ambientColor;
+    _material._specular_material = _specularColor;
+    _material._shininess = 12.0;
 
     _material._ambientColorPos = glGetUniformLocation(_program, "ambient_color");
     _material._diffuseColorPos = glGetUniformLocation(_program, "diffuse_color");
