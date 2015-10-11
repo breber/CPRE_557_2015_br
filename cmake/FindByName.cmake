@@ -1,4 +1,4 @@
-function(FindByName baseName moduleNames headerNames)
+function(FindByName baseName moduleNames headerNames additionalHeaderPaths additionalLibPaths)
 
     STRING(TOUPPER ${baseName} UP_BASE_NAME)
     STRING(TOLOWER ${baseName} LOW_BASE_NAME)
@@ -10,6 +10,7 @@ function(FindByName baseName moduleNames headerNames)
         /usr/local/include
         /sw/include
         /opt/local/include
+        ${additionalHeaderPaths}
         DOC "The directory where ${headerNames} resides")
     FIND_LIBRARY( ${baseName}_LIBRARY
         NAMES ${LIB_NAMES}
@@ -20,6 +21,7 @@ function(FindByName baseName moduleNames headerNames)
         /usr/local/lib
         /sw/lib
         /opt/local/lib
+        ${additionalLibPaths}
         DOC "The ${baseName} library")
 
     IF (${baseName}_INCLUDE_DIR)
