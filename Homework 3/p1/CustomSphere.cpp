@@ -18,7 +18,8 @@ CustomSphere::CustomSphere(
     const glm::vec3& specularColor,
     int rows,
     int segments )
-    : _vertexShader(vertexShader)
+    : GLSphere(center_x, center_y, center_z, radius, rows, segments)
+    , _vertexShader(vertexShader)
     , _fragmentShader(fragmentShader)
     , _diffuseColor(diffuseColor)
     , _ambientColor(ambientColor)
