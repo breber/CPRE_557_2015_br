@@ -1,5 +1,7 @@
 #version 330 core
 
+// author: Brian Reber (breber)
+
 // The vertex buffer input
 in vec3 in_Color;
 in vec3 in_Position;

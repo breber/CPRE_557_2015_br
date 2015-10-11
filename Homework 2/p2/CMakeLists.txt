@@ -1,3 +1,5 @@
+# author: Brian Reber (breber)
+
 cmake_minimum_required(VERSION 2.6)
 
 MESSAGE( STATUS ${CMAKE_SOURCE_DIR})

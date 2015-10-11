@@ -2,7 +2,7 @@
 //  hw2.cpp
 //  OpenGL4Test
 //
-//  Created by Rafael Radkowski on 5/28/15.
+//  author: Brian Reber (breber)
 //  Copyright (c) 2015 -. All rights reserved.
 //
 

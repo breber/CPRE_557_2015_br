@@ -18,8 +18,7 @@ CustomSphere::CustomSphere(
     const glm::vec3& specularColor,
     int rows,
     int segments )
-    : GLSphere(center_x, center_y, center_z, radius, rows, segments)
-    , _vertexShader(vertexShader)
+    : _vertexShader(vertexShader)
     , _fragmentShader(fragmentShader)
     , _diffuseColor(diffuseColor)
     , _ambientColor(ambientColor)
@@ -27,6 +26,18 @@ CustomSphere::CustomSphere(
     , _numLightsLocation(0)
     , _light_sources()
 {
+    _center.x() = center_x;
+    _center.y() = center_y;
+    _center.z() = center_z;
+
+    _radius = radius;
+    _rows = rows;
+    _segments = segments;
+
+    _render_normal_vectors = false;
+    _program_normals = -1;
+    _program = -1;
+
     // Only allow 8 light sources
     for (int i = 0; i < std::min(static_cast<size_t>(8UL), lights.size()); ++i) {
         _light_sources.push_back(lights[i]);

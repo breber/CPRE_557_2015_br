@@ -1,3 +1,5 @@
+// author: Brian Reber (breber)
+
 #include <iostream>
 
 using namespace std;

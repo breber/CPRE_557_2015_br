@@ -1,3 +1,5 @@
+// author: Brian Reber (breber)
+
 * Explain each line of code:
     // Includes the functions in the iostream library (from the standard library)
     // Provides functionality like printing out to the console
