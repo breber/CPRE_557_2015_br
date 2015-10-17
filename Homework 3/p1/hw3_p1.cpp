@@ -63,7 +63,7 @@ int main(int argc, const char * argv[])
     light_source._diffuse_intensity = 0.0;
     light_source._attenuation_coeff = 0.02;
 
-    light_source._cone_angle = 85.0; // in degree
+    light_source._cone_angle = 5.0; // in degree
     light_source._cone_direction = glm::vec3(-1.0, -1.0, 0.0); // this must be aligned with the object and light position.
     lights.push_back(light_source);
 
