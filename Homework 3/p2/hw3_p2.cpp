@@ -151,16 +151,25 @@ build_sphere_4() {
     std::vector< GLSpotLightSource > lights;
     GLSpotLightSource light_source;
 
-    // TODO: define lights
     // Goldish ambient, white spotlight
-    light_source._lightPos = glm::vec4(25.0, 25.0, 0.0, 0.0);
-    light_source._ambient_intensity = 10.0;
-    light_source._specular_intensity = 3.0;
+    light_source._lightPos = glm::vec4(25.0, 15.0, 4.0, 0.0);
+    light_source._ambient_intensity = 0.3;
+    light_source._specular_intensity = 0.0;
+    light_source._diffuse_intensity = 2.0;
+    light_source._attenuation_coeff = 0.02;
+
+    light_source._cone_angle = 90.0; // in degree
+    light_source._cone_direction = glm::vec3(-1.0, -1.0, -1.0); // this must be aligned with the object and light position.
+    lights.push_back(light_source);
+
+    light_source._lightPos = glm::vec4(25.0, 15.0, 6.0, 0.0);
+    light_source._ambient_intensity = 0.0;
+    light_source._specular_intensity = 2.0;
     light_source._diffuse_intensity = 0.0;
     light_source._attenuation_coeff = 0.02;
 
-    light_source._cone_angle = 4.0; // in degree
-    light_source._cone_direction = glm::vec3(-1.0, -1.0, 0.0); // this must be aligned with the object and light position.
+    light_source._cone_angle = 95.0; // in degree
+    light_source._cone_direction = glm::vec3(-1.0, -1.0, -1.0); // this must be aligned with the object and light position.
     lights.push_back(light_source);
 
     return CustomSphere(
@@ -171,9 +180,9 @@ build_sphere_4() {
         lights,                     // the lights to use
         "../p1/multilight.vs",      // the vertex shader
         "../p1/multilight.fs",      // the fragment shader
-        glm::vec3(1.0, 1.0, 0.0),   // diffuse color
-        glm::vec3(1.0, 1.0, 0.0),   // ambient color
-        glm::vec3(1.0, 1.0, 0.0),   // specular color
+        glm::vec3(0.83, 0.67, 0.22),// diffuse color
+        glm::vec3(0.83, 0.67, 0.22),// ambient color
+        glm::vec3(1.0, 1.0, 1.0),   // specular color
         50,                         // rows in the model
         50                          // segments in the model
     );
