@@ -44,7 +44,6 @@ build_sphere_1() {
     std::vector< GLSpotLightSource > lights;
     GLSpotLightSource light_source;
 
-    // TODO: define lights
     // Red diffuse color, with white spotlight
     light_source._lightPos = glm::vec4(25.0, 25.0, 0.0, 0.0);
     light_source._ambient_intensity = 0.0;
@@ -53,6 +52,17 @@ build_sphere_1() {
     light_source._attenuation_coeff = 0.02;
 
     light_source._cone_angle = 0.0; // in degree
+    light_source._cone_direction = glm::vec3(-1.0, -1.0, 0.0); // this must be aligned with the object and light position.
+    lights.push_back(light_source);
+
+    // White spotlight
+    light_source._lightPos = glm::vec4(15.0, 15.0, 0.0, 0.0);
+    light_source._ambient_intensity = 0.0;
+    light_source._specular_intensity = 5.0;
+    light_source._diffuse_intensity = 0.0;
+    light_source._attenuation_coeff = 0.02;
+
+    light_source._cone_angle = 50.0; // in degree
     light_source._cone_direction = glm::vec3(-1.0, -1.0, 0.0); // this must be aligned with the object and light position.
     lights.push_back(light_source);
 
@@ -65,7 +75,7 @@ build_sphere_1() {
         "../p1/multilight.vs",      // the vertex shader
         "../p1/multilight.fs",      // the fragment shader
         glm::vec3(1.0, 0.0, 0.0),   // diffuse color
-        glm::vec3(1.0, 1.0, 1.0),   // ambient color
+        glm::vec3(1.0, 0.0, 0.0),   // ambient color
         glm::vec3(1.0, 1.0, 1.0),   // specular color
         50,                         // rows in the model
         50                          // segments in the model
@@ -77,7 +87,6 @@ build_sphere_2() {
     std::vector< GLSpotLightSource > lights;
     GLSpotLightSource light_source;
 
-    // TODO: define lights
     // Blue sphere, fully diffuse
     light_source._lightPos = glm::vec4(25.0, 25.0, 0.0, 0.0);
     light_source._ambient_intensity = 0.0;
@@ -110,16 +119,15 @@ build_sphere_3() {
     std::vector< GLSpotLightSource > lights;
     GLSpotLightSource light_source;
 
-    // TODO: define lights
     // Green spotlight
-    light_source._lightPos = glm::vec4(25.0, 25.0, 0.0, 0.0);
+    light_source._lightPos = glm::vec4(10.0, 4.0, 7.0, 0.0);
     light_source._ambient_intensity = 0.0;
-    light_source._specular_intensity = 10.0;
-    light_source._diffuse_intensity = 0.0;
+    light_source._specular_intensity = 1.0;
+    light_source._diffuse_intensity = 10.0;
     light_source._attenuation_coeff = 0.02;
 
-    light_source._cone_angle = 45.0; // in degree
-    light_source._cone_direction = glm::vec3(-1.0, -1.0, 0.0); // this must be aligned with the object and light position.
+    light_source._cone_angle = 90.0; // in degree
+    light_source._cone_direction = glm::vec3(-1.0, -1.0, -1.0); // this must be aligned with the object and light position.
     lights.push_back(light_source);
 
     return CustomSphere(
@@ -132,7 +140,7 @@ build_sphere_3() {
         "../p1/multilight.fs",      // the fragment shader
         glm::vec3(0.0, 1.0, 0.0),   // diffuse color
         glm::vec3(1.0, 1.0, 1.0),   // ambient color
-        glm::vec3(0.0, 1.0, 0.0),   // specular color
+        glm::vec3(1.0, 1.0, 1.0),   // specular color
         50,                         // rows in the model
         50                          // segments in the model
     );

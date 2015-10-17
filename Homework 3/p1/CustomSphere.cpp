@@ -91,7 +91,7 @@ CustomSphere::initShader()
     _material._diffuse_material = _diffuseColor;
     _material._ambient_material = _ambientColor;
     _material._specular_material = _specularColor;
-    _material._shininess = 12.0;
+    _material._shininess = 8.0;
 
     _material._ambientColorPos = glGetUniformLocation(_program, "ambient_color");
     _material._diffuseColorPos = glGetUniformLocation(_program, "diffuse_color");
