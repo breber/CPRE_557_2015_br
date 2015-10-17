@@ -47,12 +47,12 @@ build_sphere_1() {
     // TODO: define lights
     // Red diffuse color, with white spotlight
     light_source._lightPos = glm::vec4(25.0, 25.0, 0.0, 0.0);
-    light_source._ambient_intensity = 10.0;
+    light_source._ambient_intensity = 0.0;
     light_source._specular_intensity = 0.0;
-    light_source._diffuse_intensity = 0.0;
+    light_source._diffuse_intensity = 10.0;
     light_source._attenuation_coeff = 0.02;
 
-    light_source._cone_angle = 4.0; // in degree
+    light_source._cone_angle = 0.0; // in degree
     light_source._cone_direction = glm::vec3(-1.0, -1.0, 0.0); // this must be aligned with the object and light position.
     lights.push_back(light_source);
 
@@ -113,12 +113,12 @@ build_sphere_3() {
     // TODO: define lights
     // Green spotlight
     light_source._lightPos = glm::vec4(25.0, 25.0, 0.0, 0.0);
-    light_source._ambient_intensity = 10.0;
-    light_source._specular_intensity = 0.0;
+    light_source._ambient_intensity = 0.0;
+    light_source._specular_intensity = 10.0;
     light_source._diffuse_intensity = 0.0;
     light_source._attenuation_coeff = 0.02;
 
-    light_source._cone_angle = 4.0; // in degree
+    light_source._cone_angle = 45.0; // in degree
     light_source._cone_direction = glm::vec3(-1.0, -1.0, 0.0); // this must be aligned with the object and light position.
     lights.push_back(light_source);
 
@@ -197,7 +197,7 @@ int main(int argc, const char * argv[])
 
     // This sets the camera to a new location
     // the first parameter is the eye position, the second the center location, and the third the up vector.
-    SetViewAsLookAt(glm::vec3(12.0f, 12.0f, 15.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    SetViewAsLookAt(glm::vec3(30.0f, 30.0f, 30.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
     // Enable depth test
     glEnable(GL_DEPTH_TEST);
