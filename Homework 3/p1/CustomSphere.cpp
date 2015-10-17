@@ -1,7 +1,11 @@
 //
 //  CustomSphere.cpp
 //
-//  Created by Brian Reber
+//  Group:
+//  Brian R., breber@iastate.edu
+//  Shrabya K., shrabya@iastate.edu
+//  Andrew M., amaxim@iastate.edu
+//  Kyle V., vansicek@iastate.edu
 
 #include "CustomSphere.h"
 

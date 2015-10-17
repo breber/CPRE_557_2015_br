@@ -2,8 +2,11 @@
 //  hw3_p1.cpp
 //  Part 1 of HW3
 //
-//  Created by Brian Reber (breber)
-//  Copyright (c) 2015 -. All rights reserved.
+//  Group:
+//  Brian R., breber@iastate.edu
+//  Shrabya K., shrabya@iastate.edu
+//  Andrew M., amaxim@iastate.edu
+//  Kyle V., vansicek@iastate.edu 
 //
 
 // stl include

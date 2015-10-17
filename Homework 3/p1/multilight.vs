@@ -1,6 +1,10 @@
 #version 330 core
 
-// author: Brian Reber (breber)
+//  Group:
+//  Brian R., breber@iastate.edu
+//  Shrabya K., shrabya@iastate.edu
+//  Andrew M., amaxim@iastate.edu
+//  Kyle V., vansicek@iastate.edu 
 
 // The vertex buffer input
 in vec3 in_Color;
