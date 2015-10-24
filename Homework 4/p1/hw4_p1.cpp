@@ -57,29 +57,28 @@ int main(int argc, const char * argv[])
     CoordSystem cs(40.0);
 
     // create an apperance object.
-    GLAppearance* apperance_0 = new GLAppearance("../../HCI-557-CG/data/shaders/multi_texture.vs", "../../HCI-557-CG/data/shaders/multi_texture.fs");
+    GLAppearance apperance_0("multi_texture.vs", "multi_texture.fs");
 
     GLDirectLightSource  light_source;
-    light_source._lightPos = glm::vec4(00.0,20.0,20.0, 0.0);
+    light_source._lightPos = glm::vec4(0.0, 20.0, 20.0, 0.0);
     light_source._ambient_intensity = 0.2;
     light_source._specular_intensity = 4.5;
     light_source._diffuse_intensity = 1.0;
     light_source._attenuation_coeff = 0.0;
 
     // add the light to this apperance object
-    apperance_0->addLightSource(light_source);
-
+    apperance_0.addLightSource(light_source);
 
     GLSpotLightSource spotlight_source;
-    spotlight_source._lightPos = glm::vec4(0.0,00.0,50.0, 1.0);
+    spotlight_source._lightPos = glm::vec4(0.0, 0.0, 50.0, 1.0);
     spotlight_source._ambient_intensity = 0.2;
     spotlight_source._specular_intensity = 30.5;
     spotlight_source._diffuse_intensity = 8.0;
     spotlight_source._attenuation_coeff = 0.0002;
-    spotlight_source._cone_direction = glm::vec3(-1.0, -1.0,-1.0);
+    spotlight_source._cone_direction = glm::vec3(-1.0, -1.0, -1.0);
     spotlight_source._cone_angle = 20.0;
 
-    apperance_0->addLightSource(spotlight_source);
+    apperance_0.addLightSource(spotlight_source);
 
     // Create a material object
     GLMaterial material_0;
@@ -90,25 +89,23 @@ int main(int argc, const char * argv[])
     material_0._transparency = 1.0;
 
     // Add the material to the apperance object
-    apperance_0->setMaterial(material_0);
+    apperance_0.setMaterial(material_0);
 
     // Add a texture
     GLMultiTexture* texture = new GLMultiTexture();
-    int texid = texture->loadAndCreateTextures("autumn.bmp", "gradient.bmp");
-    // int texid = texture->loadAndCreateTextures("../../HCI-557-CG/data/textures/texture_brick.bmp", "../../HCI-557-CG/data/textures/light_512_512a.bmp");
-    //int texid = texture->loadAndCreateTexture("../../data/textures/texture_earth_128x128_a.bmp");
-    apperance_0->setTexture(texture);
+    int texid = texture->loadAndCreateTextures("lion.bmp", "autumn.bmp");
+    apperance_0.setTexture(texture);
 
     // Finalize the appearance object
-    apperance_0->finalize();
+    apperance_0.finalize();
 
     // create the sphere geometry
-    GLPlane3D* plane_0 = new GLPlane3D(0.0, 0.0, 0.0, 50.0, 50.0);
-    plane_0->setApperance(*apperance_0);
-    plane_0->init();
+    GLPlane3D plane_0(0.0, 0.0, 0.0, 50.0, 50.0);
+    plane_0.setApperance(apperance_0);
+    plane_0.init();
 
     // If you want to change appearance parameters after you init the object, call the update function
-    apperance_0->updateLightSources();
+    apperance_0.updateLightSources();
 
     // Set up our green background color
     static const GLfloat clear_color[] = { 0.0f, 0.0f, 0.0f, 1.0f };
@@ -144,12 +141,12 @@ int main(int argc, const char * argv[])
 
         // draw the objects
         cs.draw();
-        plane_0->draw();
+        plane_0.draw();
 
         // change the texture appearance blend mode
         bool ret = texture->setTextureBlendMode(g_change_texture_blend);
         if (ret) {
-            apperance_0->updateTextures();
+            apperance_0.updateTextures();
         }
 
         // Swap the buffers so that what we drew will appear on the screen.
