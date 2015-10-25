@@ -108,10 +108,6 @@ int main(int argc, const char * argv[])
     backgroundTexture->loadAndCreateTexture("autumn.bmp");
     firstAppearance->setTexture(backgroundTexture);
 
-    // GLMultiTexture* backgroundTexture = new GLMultiTexture();
-    // backgroundTexture->loadAndCreateTextures("lion.bmp", "autumn.bmp");
-    // firstAppearance->setTexture(backgroundTexture);
-
     // Finalize the appearance object
     firstAppearance->finalize();
 
@@ -123,10 +119,24 @@ int main(int argc, const char * argv[])
     // If you want to change appearance parameters after you init the object, call the update function
     firstAppearance->updateLightSources();
 
+    // Second set of appearances
+    GLAppearance* secondAppearance( getAppearance() );
 
-    // GLMultiTexture* texture = new GLMultiTexture();
-    // int texid = texture->loadAndCreateTextures("lion.bmp", "autumn.bmp");
-    // firstAppearance.setTexture(texture);
+    // Add a texture for the foreground display
+    GLMultiTexture* foregroundTexture = new GLMultiTexture();
+    foregroundTexture->loadAndCreateTextures("lion.bmp", "gradient.bmp");
+    secondAppearance->setTexture(foregroundTexture);
+
+    // Finalize the appearance object
+    secondAppearance->finalize();
+
+    // create the foreground plane
+    GLPlane3D foregroundPlane(-12.5, -12.5, 1.0, 25.0, 25.0);
+    foregroundPlane.setApperance(*secondAppearance);
+    foregroundPlane.init();
+
+    // If you want to change appearance parameters after you init the object, call the update function
+    secondAppearance->updateLightSources();
 
     // Set up our green background color
     static const GLfloat clear_color[] = { 0.0f, 0.0f, 0.0f, 1.0f };
@@ -146,10 +156,6 @@ int main(int argc, const char * argv[])
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    // sphere->enableNormalVectorRenderer();
-
-    //// Main render loop
-
     // This is our render loop. As long as our window remains open (ESC is not pressed), we'll continue to render things.
     while (!glfwWindowShouldClose(window))
     {
@@ -163,12 +169,17 @@ int main(int argc, const char * argv[])
         // draw the objects
         cs.draw();
         backgroundPlane.draw();
+        foregroundPlane.draw();
 
         // change the texture appearance blend mode
         bool ret = backgroundTexture->setTextureBlendMode(g_change_texture_blend);
         if (ret) {
             firstAppearance->updateTextures();
         }
+        // bool ret = foregroundTexture->setTextureBlendMode(g_change_texture_blend);
+        // if (ret) {
+        //     secondAppearance->updateTextures();
+        // }
 
         // Swap the buffers so that what we drew will appear on the screen.
         glfwSwapBuffers(window);
