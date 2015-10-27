@@ -9,7 +9,7 @@ MESSAGE( STATUS ${CMAKE_SOURCE_DIR})
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/../../cmake")
 set(CLASS_SOURCE_PATH ${CLASS_SOURCE_PATH} "${CMAKE_SOURCE_DIR}/../../HCI-557-CG/gl_common")
 
-foreach(lib hw4_p1.cpp)
+foreach(lib hw4_p1.cpp TriTexture.cpp)
     file(GLOB TEMP_SOURCE ${lib})
     LIST(APPEND SOURCE ${TEMP_SOURCE})
 endforeach(lib)
