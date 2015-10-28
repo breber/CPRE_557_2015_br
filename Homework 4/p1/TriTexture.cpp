@@ -160,7 +160,7 @@ bool TriTexture::addVariablesToProgram(GLuint program, int variable_index) {
 
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, _texture_3);
-    glUniform1i(_textureIdx3, 3);
+    glUniform1i(_textureIdx3, 2);
 
     return true;
 }
