@@ -106,7 +106,7 @@ int main(int argc, const char * argv[])
     // Add a texture for the background display
     TriTexture* backgroundTexture = new TriTexture();
     backgroundTexture->loadAndCreateTextures("lion.bmp", "gradient.bmp", "autumn.bmp");
-    firstAppearance->setTexture(backgroundTexture);
+    backgroundTexture->addVariablesToProgram(firstAppearance->getProgram(), -1);
 
     // Finalize the appearance object
     firstAppearance->finalize();

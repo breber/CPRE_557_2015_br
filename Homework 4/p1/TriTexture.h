@@ -45,8 +45,6 @@ public:
         string path_and_file_texture_2,
         string path_and_file_texture_3);
 
-protected:
-
     /*!
      Adds the variables of this object to the shader program
      */
