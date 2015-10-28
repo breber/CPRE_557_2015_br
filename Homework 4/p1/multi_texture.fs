@@ -22,12 +22,11 @@ void main(void)
 
     // Blend the texture colors together
     color = 0.3 * tex1 + 0.3 * tex2 + 0.3 * tex3;
-    // color = 1.0 * tex3;
-    // color = 0.1 * pass_Color * tex2;
-    // color = 0.3 * tex3;
 
-    // color = 0.1 * pass_Color + tex1 + tex2 + tex3;
     // color = tex1 * tex2 * tex3;
+    // color = 0.3 * pass_Color * (tex1.r + tex2.g + tex3.b);
+    // color = 0.3 * pass_Color * (tex1.b + tex2.b + tex3.b);
     // color = tex2.r * tex1;
-    // color = 0.1 * pass_Color + tex1;
+    //
+    // color = .5 * tex1 + .85 * tex2;
 }
