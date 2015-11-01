@@ -16,6 +16,10 @@ out vec4 color;
 void main(void)
 {
     vec2 noiseVec = normalize(texture(texture_foreground, pass_TexCoord)).xy;
+
+    // Playing with these values like the slide says leads to a result that
+    // doesn't seem too different from the original image. Just using the
+    // normalized noiseVec makes a much more interesting result
     //noiseVec = (noiseVec * 2.0 - 1.0) * 0.035;
 
     color = texture(texture_background, pass_TexCoord + noiseVec);
