@@ -105,7 +105,7 @@ int main(int argc, const char * argv[])
 
     // Add a texture for the background display
     GLMultiTexture* backgroundTexture = new GLMultiTexture();
-    backgroundTexture->loadAndCreateTextures("../p1/lion.bmp", "../p1/gradient.bmp");
+    backgroundTexture->loadAndCreateTextures("grand_canyon.bmp", "bump.bmp");
     firstAppearance->setTexture(backgroundTexture);
 
     // Finalize the appearance object

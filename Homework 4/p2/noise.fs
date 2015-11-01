@@ -15,9 +15,8 @@ out vec4 color;
 
 void main(void)
 {
-    vec2 noiseVec;
-    // noiseVec = normalize(texture(texture_foreground, pass_TexCoord)).gb;
-    noiseVec = (noiseVec * 2.0 - 1.0) * 0.035;
+    vec2 noiseVec = normalize(texture(texture_foreground, pass_TexCoord)).xy;
+    //noiseVec = (noiseVec * 2.0 - 1.0) * 0.035;
 
     color = texture(texture_background, pass_TexCoord + noiseVec);
 }
