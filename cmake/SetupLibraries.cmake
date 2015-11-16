@@ -12,6 +12,9 @@ function(SetupLibraries)
         set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/" ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/../../HCI-557-CG/SDK/cmake/")
     ENDIF(WINDOWS)
 
+    # Linux
+    # -lGLEW -lglfw3 -lGL -lX11 -lXi -lXrandr -lXxf86vm -lXinerama -lXcursor -lrt -lm -pthread
+
     foreach(lib GLEW GLM GLFW3 OpenGL)
         FIND_PACKAGE(${lib} REQUIRED)
         STRING(TOUPPER ${lib} LIB_NAME)
