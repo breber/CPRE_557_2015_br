@@ -27,7 +27,6 @@
 #include "HCI557Common.h"
 #include "CoordSystem.h"
 #include "Plane3D.h"
-#include "CarObject.h"
 
 using namespace std;
 
@@ -43,8 +42,8 @@ extern Trackball trackball;
 // this is a helper variable to allow us to change the texture blend model
 extern int g_change_texture_blend;
 
-CarObject* car;
-glm::mat4 g_tranform_car;
+GLObject* car;
+glm::mat4 g_transform_car;
 
 void addLights(GLAppearance* appearance)
 {
@@ -136,16 +135,14 @@ void createCar()
     // Finalize the appearance object
     carAppearance->finalize();
 
-    // create the background plane
-    car = new CarObject(0.0, 0.0, 0.0, 50.0);
-    car->setApperance(*carAppearance);
-    car->init();
+    GLObjectObj* carObj = new GLObjectObj("car.obj");
+    carObj->setApperance(*carAppearance);
+    carObj->init();
+    car = carObj;
 
-    // If you want to change appearance parameters after you init the object, call the update function
-    // car->updateLightSources();
-
-    g_tranform_car = glm::translate(glm::vec3(0.0, 0.0f, 10.0f));
-    car->setMatrix(g_tranform_car);
+    // Rotate the car model 90 degrees so it is facing the right way
+    g_transform_car = glm::rotate(static_cast< float >( M_PI / 2.0f ), glm::vec3(1.0f, 0.0f, 0.0f));
+    car->setMatrix(g_transform_car);
 }
 
 void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -158,44 +155,21 @@ void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, in
         glfwSetWindowShouldClose(window, GL_TRUE);
     }
 
-    // Translation
+    // Translation (w = forward)
     if( (key == 87 && action == GLFW_REPEAT) || (key == 87 && action == GLFW_PRESS) ) // key w
     {
-        cout <<  "key w pressed" << endl;
-        g_tranform_car =  g_tranform_car * glm::translate(glm::vec3(-delta, 0.0, 0.0f));
-        car->setMatrix(g_tranform_car);
+        g_transform_car = g_transform_car * glm::translate(glm::vec3(0.0f, 0.0f, -delta));
+        car->setMatrix(g_transform_car);
         move = true;
     }
+    // Translation (s = backward)
     else if((key == 83 && action == GLFW_REPEAT) || (key == 83 && action == GLFW_PRESS)) // key s
     {
-        cout <<  "key s pressed" << endl;
-        g_tranform_car =  g_tranform_car * glm::translate(glm::vec3(delta, 0.0, 0.0f));
-        car->setMatrix(g_tranform_car);
+        g_transform_car = g_transform_car * glm::translate(glm::vec3(0.0f, 0.0f, delta));
+        car->setMatrix(g_transform_car);
         move = true;
     }
-
-    // if (move)
-    // {
-    //     glm::vec3 s(g_tranform_sphere[3][0],g_tranform_sphere[3][1],g_tranform_sphere[3][2]);
-    //     glm::vec3 e(g_tranform_sphere[3][0],g_tranform_sphere[3][1],g_tranform_sphere[3][2]-20);
-    //     vector<glm::vec3> res;
-    //
-    //     // perform the ray intersectiont test.
-    //     RayIntersectionTest::intersect(s, e, *loadedModel1, res);
-    //
-    //     // pick the first result if one is available
-    //     if (res.size() > 0) {
-    //         glm::vec3 position = res[0];
-    //
-    //         g_tranform_sphere_result = g_tranform_sphere;
-    //         g_tranform_sphere_result[3][0] = position[0];
-    //         g_tranform_sphere_result[3][1] = position[1];
-    //         g_tranform_sphere_result[3][2] = position[2];
-    //         sphere_result->setMatrix(g_tranform_sphere_result);
-    //     }
-    // }
-
-    cout << key << endl;
+    // cout << key << endl;
 }
 
 int main(int argc, const char * argv[])
@@ -213,18 +187,12 @@ int main(int argc, const char * argv[])
 
     GLObject* groundPlane = createGround();
 
-
     // Create Car Object
     createCar();
-
 
     // Set up our green background color
     static const GLfloat clear_color[] = { 0.53f, 0.81f, 0.98f, 1.0f };
     static const GLfloat clear_depth[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-    // This sets the camera to a new location
-    // the first parameter is the eye position, the second the center location, and the third the up vector.
-    SetViewAsLookAt(glm::vec3(300.0f, 0.0f, 300.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
     // Enable depth test
     // ignore this line, it allows us to keep the distance value after we proejct each object to a 2d canvas.
@@ -242,12 +210,19 @@ int main(int argc, const char * argv[])
     // This is our render loop. As long as our window remains open (ESC is not pressed), we'll continue to render things.
     while (!glfwWindowShouldClose(window))
     {
+        // Add the camera and a camera delta
+        glm::mat4 camera_transformation = glm::lookAt(glm::vec3(0.0f, 5.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        glm::mat4 camera_matrix = camera_transformation * glm::inverse(g_transform_car);
+
+        // set the view matrix
+        SetViewAsMatrix(camera_matrix);
+
         // Clear the entire buffer with our green color (sets the background to be green).
-        glClearBufferfv(GL_COLOR , 0, clear_color);
-        glClearBufferfv(GL_DEPTH , 0, clear_depth);
+        glClearBufferfv(GL_COLOR, 0, clear_color);
+        glClearBufferfv(GL_DEPTH, 0, clear_depth);
 
         // Set the trackball locatiom
-        //SetTrackballLocation(trackball.getRotationMatrix());
+        SetTrackballLocation(trackball.getRotationMatrix());
 
         // draw the objects
         cs.draw();

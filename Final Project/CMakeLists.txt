@@ -9,7 +9,7 @@ MESSAGE( STATUS ${CMAKE_SOURCE_DIR})
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/../cmake")
 set(CLASS_SOURCE_PATH ${CLASS_SOURCE_PATH} "${CMAKE_SOURCE_DIR}/../HCI-557-CG/gl_common")
 
-foreach(lib final_project_main.cpp CarObject.cpp)
+foreach(lib final_project_main.cpp)
     file(GLOB TEMP_SOURCE ${lib})
     LIST(APPEND SOURCE ${TEMP_SOURCE})
 endforeach(lib)
@@ -17,7 +17,7 @@ endforeach(lib)
 # Include files from the class repo
 INCLUDE_DIRECTORIES(${CLASS_SOURCE_PATH})
 
-foreach(f camera.cpp GLAppearance.cpp Shaders.cpp GLSphere.cpp GLObject.cpp CoordSystem.cpp controls.cpp Plane3D.cpp HCI557Common.cpp Texture.cpp)
+foreach(f camera.cpp GLAppearance.cpp Shaders.cpp GLSphere.cpp GLObject.cpp GLObjectObj.cpp CoordSystem.cpp controls.cpp Plane3D.cpp HCI557Common.cpp Texture.cpp)
     file(GLOB TEMP_SOURCE ${CLASS_SOURCE_PATH}/${f})
     LIST(APPEND SOURCE ${TEMP_SOURCE})
 endforeach(f)
