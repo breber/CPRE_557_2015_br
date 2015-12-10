@@ -11,9 +11,13 @@
 // GLM
 #include <glm/gtx/transform.hpp>
 
+// glfw includes
+#include <GLFW/glfw3.h>
+
 Garage::Garage()
 : Scene()
 , vehicles()
+, selectedVehicleIndex(0)
 {
     // Car model from http://tf3dm.com/3d-model/puo-4240-60733.html
     createCar("car.obj");
@@ -59,16 +63,19 @@ void Garage::updateCamera()
     glm::mat4 selectedVehicleMatrix;
 
     // Update the view matrices and determine camera position
+    const int vehicleWidth = 10;
     const int countVehicles = vehicles.size();
+    int index = 0;
     for(std::vector<GLObjectObj *>::iterator vehicleIter = vehicles.begin();
         vehicleIter != vehicles.end();
-        ++vehicleIter)
+        ++vehicleIter, ++index)
     {
         // Rotate the car model 90 degrees so it faces the right direction
         glm::mat4 carMatrix = glm::rotate(static_cast< float >(M_PI / 2.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
         // Move it over depending on how many vehicles we have to render
-        // TODO:
+        const float delta = (countVehicles - index + 1) / 2.0 * vehicleWidth;
+        carMatrix = carMatrix * glm::translate(glm::vec3(delta, 0.0f, 0.0f));
 
         // Update the model matrix with the newly calculated matrix
         (*vehicleIter)->setMatrix(carMatrix);
@@ -103,11 +110,24 @@ void Garage::drawScene()
 
 void Garage::onKey(int key, int scancode, int action, int mods)
 {
-    // TODO: maybe move selection highlight?
+    // Change selection highlight on left or right arrow key
+    if (key == 263 && action == GLFW_PRESS)
+    {
+        if (selectedVehicleIndex > 0)
+        {
+            --selectedVehicleIndex;
+        }
+    }
+    else if (key == 262 && action == GLFW_PRESS)
+    {
+        if (selectedVehicleIndex < vehicles.size() - 1)
+        {
+            ++selectedVehicleIndex;
+        }
+    }
 }
 
 GLObjectObj* Garage::getSelectedVehicle() const
 {
-    // TODO: figure out selected vehicle
-    return vehicles.front();
+    return vehicles[selectedVehicleIndex];
 }

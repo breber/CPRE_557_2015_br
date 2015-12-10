@@ -31,4 +31,5 @@ private:
     void createCar(const std::string& objPath);
 
     std::vector<GLObjectObj*> vehicles;
+    int selectedVehicleIndex;
 };
