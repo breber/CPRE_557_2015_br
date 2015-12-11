@@ -18,12 +18,34 @@ Outside::Outside(GLObjectObj* selectedVehicle)
 : Scene()
 , vehicleMatrix()
 , vehicle(selectedVehicle)
-, ground(0.0, 0.0, 0.0, 500.0, 500.0)
 {
     // Rotate the car model 90 degrees so it faces the right direction
     vehicleMatrix = glm::rotate(static_cast< float >(M_PI / 2.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+}
 
-    initializeGround();
+void Outside::init()
+{
+    initializeLights();
+
+    // TODO: reset lighting on vehicle?
+
+    // Call super class
+    initializeGround(glm::vec3(0.0, 0.8, 0.0));
+}
+
+void Outside::initializeLights()
+{
+    // The GLAppearance takes the address of the light source, so we can't use
+    // stack variables to create light sources
+    GLDirectLightSource* light_source_ptr = new GLDirectLightSource();
+    GLDirectLightSource& light_source = *light_source_ptr;
+    light_source._lightPos = glm::vec4(0.0, 20.0, 20.0, 0.0);
+    light_source._ambient_intensity = 0.1;
+    light_source._specular_intensity = 4.5;
+    light_source._diffuse_intensity = 1.0;
+    light_source._attenuation_coeff = 0.0;
+
+    lights.push_back(light_source_ptr);
 }
 
 void Outside::updateCamera()
@@ -38,8 +60,9 @@ void Outside::updateCamera()
 
 void Outside::drawScene()
 {
+    Scene::drawScene();
+
     // TODO: draw race track scene
-    ground.draw();
 
     // Draw the vehicle
     vehicle->draw();
@@ -61,40 +84,4 @@ void Outside::onKey(int key, int scancode, int action, int mods)
         vehicleMatrix = vehicleMatrix * glm::translate(glm::vec3(0.0f, 0.0f, delta));
         vehicle->setMatrix(vehicleMatrix);
     }
-}
-
-void Outside::initializeGround()
-{
-    // create an apperance object.
-    GLAppearance* grassAppearance = new GLAppearance("final_project.vs", "single_texture.fs");
-
-    // Add the lights to the car
-    addLightsToAppearance(*grassAppearance);
-
-    // Create a material object
-    GLMaterial* material_ptr = new GLMaterial();
-    GLMaterial& material = *material_ptr;
-    material._diffuse_material = glm::vec3(0.0, 0.8, 0.0);
-    material._ambient_material = glm::vec3(0.0, 0.8, 0.0);
-    material._specular_material = glm::vec3(1.0, 1.0, 1.0);
-    material._shininess = 12.0;
-    material._transparency = 1.0;
-
-    // Add the material to the apperance object
-    grassAppearance->setMaterial(material);
-
-    // Add a texture for the background display
-    GLTexture* grassTexture = new GLTexture();
-    grassTexture->loadAndCreateTexture("grass.bmp");
-    grassAppearance->setTexture(grassTexture);
-
-    // Finalize the appearance object
-    grassAppearance->finalize();
-
-    // create the background plane
-    ground.setApperance(*grassAppearance);
-    ground.init();
-
-    // If you want to change appearance parameters after you init the object, call the update function
-    grassAppearance->updateLightSources();
 }

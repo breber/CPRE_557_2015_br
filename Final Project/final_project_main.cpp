@@ -65,6 +65,7 @@ void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, in
             if (!outsideScene)
             {
                 outsideScene = new Outside(garageScene->getSelectedVehicle());
+                outsideScene->init();
             }
             currentScene = outsideScene;
         }
@@ -96,6 +97,7 @@ int main(int argc, const char * argv[])
     CoordSystem cs(40.0);
 
     garageScene = new Garage();
+    garageScene->init();
     currentScene = garageScene;
 
     // Set up our green background color

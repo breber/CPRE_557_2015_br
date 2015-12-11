@@ -10,35 +10,51 @@
 
 Scene::Scene()
 : lights()
+, ground(GLPlane3D(0.0, 0.0, 0.0, 500.0, 500.0), NULL)
 {
-    initializeLights();
 }
 
-void Scene::initializeLights()
+void Scene::drawScene()
 {
-    // The GLAppearance takes the address of the light source, so we can't use
-    // stack variables to create light sources
-    GLDirectLightSource* light_source_ptr = new GLDirectLightSource();
-    GLDirectLightSource& light_source = *light_source_ptr;
-    light_source._lightPos = glm::vec4(0.0, 20.0, 20.0, 0.0);
-    light_source._ambient_intensity = 0.2;
-    light_source._specular_intensity = 4.5;
-    light_source._diffuse_intensity = 1.0;
-    light_source._attenuation_coeff = 0.0;
+    ground.first.draw();
+}
 
-    lights.push_back(light_source_ptr);
+void Scene::initializeGround(const glm::vec3& groundColor)
+{
+    // create an apperance object.
+    GLAppearance* groundAppearance = new GLAppearance("final_project.vs", "single_texture.fs");
 
-    GLSpotLightSource* spotlight_source_ptr = new GLSpotLightSource();
-    GLSpotLightSource& spotlight_source = *spotlight_source_ptr;
-    spotlight_source._lightPos = glm::vec4(0.0, 0.0, 50.0, 1.0);
-    spotlight_source._ambient_intensity = 0.2;
-    spotlight_source._specular_intensity = 30.5;
-    spotlight_source._diffuse_intensity = 8.0;
-    spotlight_source._attenuation_coeff = 0.0002;
-    spotlight_source._cone_direction = glm::vec3(-1.0, -1.0, -1.0);
-    spotlight_source._cone_angle = 20.0;
+    // Add the lights
+    addLightsToAppearance(*groundAppearance);
 
-    lights.push_back(spotlight_source_ptr);
+    // Create a material object
+    GLMaterial* material_ptr = new GLMaterial();
+    GLMaterial& material = *material_ptr;
+    material._diffuse_material = groundColor;
+    material._ambient_material = groundColor;
+    material._specular_material = glm::vec3(1.0, 1.0, 1.0);
+    material._shininess = 12.0;
+    material._transparency = 1.0;
+
+    // Add the material to the apperance object
+    groundAppearance->setMaterial(material);
+
+    // Add a texture for the background display
+    GLTexture* grassTexture = new GLTexture();
+    grassTexture->loadAndCreateTexture("grass.bmp");
+    groundAppearance->setTexture(grassTexture);
+
+    // Finalize the appearance object
+    groundAppearance->finalize();
+
+    // create the background plane
+    ground.first.setApperance(*groundAppearance);
+    ground.first.init();
+
+    // If you want to change appearance parameters after you init the object, call the update function
+    groundAppearance->updateLightSources();
+
+    ground.second = groundAppearance;
 }
 
 void Scene::addLightsToAppearance(GLAppearance& appearance)
