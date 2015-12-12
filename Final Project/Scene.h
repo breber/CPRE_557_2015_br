@@ -15,7 +15,7 @@ class Scene
 {
 public:
     Scene();
-    ~Scene() {};
+    virtual ~Scene() {};
 
     virtual void init() = 0;
     virtual void updateCamera() = 0;
@@ -27,6 +27,6 @@ protected:
     void initializeGround(const glm::vec3& groundColor);
     void addLightsToAppearance(GLAppearance& appearance);
 
-    std::vector<GLLightSource *> lights;
-    std::pair<GLPlane3D, GLAppearance*> ground;
+    std::vector<GLLightSource*> lights;
+    std::pair<GLPlane3D, GLAppearance> ground;
 };

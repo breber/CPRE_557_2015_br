@@ -25,7 +25,14 @@ Garage::Garage()
 
 Garage::~Garage()
 {
-    // TODO: clean up unused objects
+    // Delete the actual objects to free up some memory
+    // This requires other scenes to create their necessary vehicles
+    for(std::vector<Vehicle>::iterator vehicleIter = vehicles.begin();
+        vehicleIter != vehicles.end();
+        ++vehicleIter)
+    {
+        delete (*vehicleIter).object;
+    }
 }
 
 void Garage::init()
@@ -71,11 +78,10 @@ void Garage::initializeLights()
 
 void Garage::createCar(const std::string& objPath, float scale)
 {
-    Vehicle vehicle(objPath, scale);
-    vehicle.appearance = new GLAppearance("final_project.vs", "single_texture.fs");
+    Vehicle vehicle(objPath, scale, "final_project.vs", "single_texture.fs");
 
     // Add the lights to the car
-    addLightsToAppearance(*vehicle.appearance);
+    addLightsToAppearance(vehicle.appearance);
 
     // Create a material object
     GLMaterial* material_ptr = new GLMaterial();
@@ -87,18 +93,13 @@ void Garage::createCar(const std::string& objPath, float scale)
     material._transparency = 1.0;
 
     // Add the material to the apperance object
-    vehicle.appearance->setMaterial(material);
-
-    // Add a texture for the background display
-    // GLTexture* carTexture = new GLTexture();
-    // carTexture->loadAndCreateTexture("grass.bmp");
-    // carAppearance->setTexture(carTexture);
+    vehicle.appearance.setMaterial(material);
 
     // Finalize the appearance object
-    vehicle.appearance->finalize();
+    vehicle.appearance.finalize();
 
     vehicle.object = new GLObjectObj(objPath);
-    vehicle.object->setApperance(*vehicle.appearance);
+    vehicle.object->setApperance(vehicle.appearance);
     vehicle.object->init();
 
     vehicles.push_back(vehicle);
@@ -160,7 +161,7 @@ void Garage::updateCamera()
 
 void Garage::drawScene()
 {
-    ground.second->updateLightSources();
+    ground.second.updateLightSources();
 
     Scene::drawScene();
 
@@ -171,7 +172,7 @@ void Garage::drawScene()
         ++vehicleIter)
     {
         // Update the lights and draw
-        (*vehicleIter).appearance->updateLightSources();
+        (*vehicleIter).appearance.updateLightSources();
         (*vehicleIter).object->draw();
     }
 }
@@ -197,7 +198,7 @@ void Garage::onKey(int key, int scancode, int action, int mods)
     }
 }
 
-Vehicle Garage::getSelectedVehicle() const
+const Vehicle& Garage::getSelectedVehicle() const
 {
     return vehicles[selectedVehicleIndex];
 }

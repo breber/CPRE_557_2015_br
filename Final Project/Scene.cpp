@@ -10,7 +10,7 @@
 
 Scene::Scene()
 : lights()
-, ground(GLPlane3D(0.0, 0.0, 0.0, 500.0, 500.0), NULL)
+, ground(GLPlane3D(0.0, 0.0, 0.0, 500.0, 500.0), GLAppearance("final_project.vs", "single_texture.fs"))
 {
 }
 
@@ -21,11 +21,8 @@ void Scene::drawScene()
 
 void Scene::initializeGround(const glm::vec3& groundColor)
 {
-    // create an apperance object.
-    GLAppearance* groundAppearance = new GLAppearance("final_project.vs", "single_texture.fs");
-
     // Add the lights
-    addLightsToAppearance(*groundAppearance);
+    addLightsToAppearance(ground.second);
 
     // Create a material object
     GLMaterial* material_ptr = new GLMaterial();
@@ -37,24 +34,22 @@ void Scene::initializeGround(const glm::vec3& groundColor)
     material._transparency = 1.0;
 
     // Add the material to the apperance object
-    groundAppearance->setMaterial(material);
+    ground.second.setMaterial(material);
 
     // Add a texture for the background display
     GLTexture* grassTexture = new GLTexture();
     grassTexture->loadAndCreateTexture("grass.bmp");
-    groundAppearance->setTexture(grassTexture);
+    ground.second.setTexture(grassTexture);
 
     // Finalize the appearance object
-    groundAppearance->finalize();
+    ground.second.finalize();
 
     // create the background plane
-    ground.first.setApperance(*groundAppearance);
+    ground.first.setApperance(ground.second);
     ground.first.init();
 
     // If you want to change appearance parameters after you init the object, call the update function
-    groundAppearance->updateLightSources();
-
-    ground.second = groundAppearance;
+    ground.second.updateLightSources();
 }
 
 void Scene::addLightsToAppearance(GLAppearance& appearance)

@@ -19,10 +19,14 @@
 class Vehicle
 {
 public:
-    Vehicle(const std::string& obj, float scale);
+    Vehicle(
+        const std::string& obj,
+        float scale,
+        const std::string& vs,
+        const std::string& fs);
 
     std::string objPath;
     float objScale;
     GLObjectObj* object;
-    GLAppearance* appearance;
+    GLAppearance appearance;
 };

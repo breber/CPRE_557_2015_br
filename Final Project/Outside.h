@@ -17,8 +17,8 @@
 class Outside : public Scene
 {
 public:
-    Outside(Vehicle selectedVehicle);
-    ~Outside() {};
+    Outside(const Vehicle& selectedVehicle);
+    virtual ~Outside();
 
     virtual void init();
     virtual void updateCamera();

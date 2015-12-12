@@ -14,21 +14,46 @@
 // glfw includes
 #include <GLFW/glfw3.h>
 
-Outside::Outside(Vehicle selectedVehicle)
+Outside::Outside(const Vehicle& selectedVehicle)
 : Scene()
 , vehicleMatrix()
-, vehicle(selectedVehicle)
+, vehicle(selectedVehicle.objPath, selectedVehicle.objScale, "final_project.vs", "single_texture.fs")
 {
     // Rotate the car model 90 degrees so it faces the right direction
     vehicleMatrix = glm::rotate(static_cast< float >(M_PI / 2.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     vehicleMatrix = vehicleMatrix * glm::scale(glm::vec3(vehicle.objScale, vehicle.objScale, vehicle.objScale));
 }
 
+Outside::~Outside()
+{
+    delete vehicle.object;
+}
+
 void Outside::init()
 {
     initializeLights();
 
-    // TODO: reset lighting on vehicle?
+    // Add the lights to the car
+    addLightsToAppearance(vehicle.appearance);
+
+    // Create a material object
+    GLMaterial* material_ptr = new GLMaterial();
+    GLMaterial& material = *material_ptr;
+    material._diffuse_material = glm::vec3(0.0, 1.0, 0.0);
+    material._ambient_material = glm::vec3(0.0, 1.0, 0.0);
+    material._specular_material = glm::vec3(1.0, 1.0, 1.0);
+    material._shininess = 12.0;
+    material._transparency = 1.0;
+
+    // Add the material to the apperance object
+    vehicle.appearance.setMaterial(material);
+
+    // Finalize the appearance object
+    vehicle.appearance.finalize();
+
+    vehicle.object = new GLObjectObj(vehicle.objPath);
+    vehicle.object->setApperance(vehicle.appearance);
+    vehicle.object->init();
 
     // Call super class
     initializeGround(glm::vec3(0.0, 0.8, 0.0));

@@ -19,14 +19,14 @@ class Garage : public Scene
 {
 public:
     Garage();
-    ~Garage();
+    virtual ~Garage();
 
     virtual void init();
     virtual void updateCamera();
     virtual void drawScene();
     virtual void onKey(int key, int scancode, int action, int mods);
 
-    Vehicle getSelectedVehicle() const;
+    const Vehicle& getSelectedVehicle() const;
 private:
     virtual void initializeLights();
     void createCar(const std::string& objPath, float scale);

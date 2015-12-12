@@ -8,10 +8,14 @@
 
 #include "Vehicle.h"
 
-Vehicle::Vehicle(const std::string& obj, float scale)
+Vehicle::Vehicle(
+    const std::string& obj,
+    float scale,
+    const std::string& vs,
+    const std::string& fs)
 : objPath(obj)
 , objScale(scale)
 , object()
-, appearance()
+, appearance(vs, fs)
 {
 }

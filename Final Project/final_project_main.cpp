@@ -44,9 +44,6 @@ extern Trackball trackball;
 
 Scene* currentScene;
 
-Garage* garageScene;
-Outside* outsideScene;
-
 void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
@@ -59,19 +56,19 @@ void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, in
     // For now, toggle between scenes with 't'
     if (key == 84 && action == GLFW_PRESS) // t
     {
-        std::cout << "toggling scene" << std::endl;
-        if (currentScene == garageScene)
+        // Determine if we are currently displaying a garage scene
+        Garage* garageScene = dynamic_cast< Garage* >(currentScene);
+        if (garageScene)
         {
-            if (!outsideScene)
-            {
-                outsideScene = new Outside(garageScene->getSelectedVehicle());
-                outsideScene->init();
-            }
-            currentScene = outsideScene;
-        }
-        else
-        {
-            currentScene = garageScene;
+            std::cout << "toggling scene" << std::endl;
+
+            // create a new outside scene with the vehicle
+            // that was selected in the garage
+            currentScene = new Outside(garageScene->getSelectedVehicle());
+            currentScene->init();
+
+            // and delete the garage scene
+            delete garageScene;
         }
 
         return;
@@ -96,9 +93,9 @@ int main(int argc, const char * argv[])
     // coordinate system
     CoordSystem cs(40.0);
 
-    garageScene = new Garage();
-    garageScene->init();
-    currentScene = garageScene;
+    // Start out with the garage scene
+    currentScene = new Garage();
+    currentScene->init();
 
     // Set up our green background color
     static const GLfloat clear_color[] = { 0.53f, 0.81f, 0.98f, 1.0f };
