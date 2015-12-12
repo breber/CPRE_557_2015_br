@@ -69,9 +69,7 @@ void Garage::initializeLights()
 
 void Garage::createCar(const std::string& objPath, float scale)
 {
-    Vehicle vehicle;
-    vehicle.objPath = objPath;
-    vehicle.scale = scale;
+    Vehicle vehicle(objPath, scale);
     vehicle.appearance = new GLAppearance("final_project.vs", "single_texture.fs");
 
     // Add the lights to the car
@@ -124,7 +122,7 @@ void Garage::updateCamera()
     {
         // Rotate the car model 90 degrees so it faces the right direction
         glm::mat4 carMatrix = glm::rotate(static_cast< float >(M_PI / 2.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        carMatrix = carMatrix * glm::scale(glm::vec3((*vehicleIter).scale, (*vehicleIter).scale, (*vehicleIter).scale));
+        carMatrix = carMatrix * glm::scale(glm::vec3((*vehicleIter).objScale, (*vehicleIter).objScale, (*vehicleIter).objScale));
 
         // Move it over depending on how many vehicles we have to render
         const float delta = (countVehicles - index + 1) / 2.0 * vehicleWidth;
@@ -134,7 +132,7 @@ void Garage::updateCamera()
         (*vehicleIter).object->setMatrix(carMatrix);
 
         // If it is selected, point the camera at it
-        if ((*vehicleIter).object == getSelectedVehicle())
+        if ((*vehicleIter).object == getSelectedVehicle().object)
         {
             selectedVehicleMatrix = carMatrix;
             selectedDelta = delta;
@@ -193,7 +191,7 @@ void Garage::onKey(int key, int scancode, int action, int mods)
     }
 }
 
-GLObjectObj* Garage::getSelectedVehicle() const
+Vehicle Garage::getSelectedVehicle() const
 {
-    return vehicles[selectedVehicleIndex].object;
+    return vehicles[selectedVehicleIndex];
 }

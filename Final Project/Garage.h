@@ -9,10 +9,7 @@
 
 // local files
 #include "Scene.h"
-
-// course files
-#include "GLObjectObj.h"
-#include "GLSphere.h"
+#include "Vehicle.h"
 
 // stdlib
 #include <string>
@@ -29,16 +26,8 @@ public:
     virtual void drawScene();
     virtual void onKey(int key, int scancode, int action, int mods);
 
-    GLObjectObj* getSelectedVehicle() const;
+    Vehicle getSelectedVehicle() const;
 private:
-    struct Vehicle
-    {
-        std::string objPath;
-        float scale;
-        GLObjectObj* object;
-        GLAppearance* appearance;
-    };
-
     virtual void initializeLights();
     void createCar(const std::string& objPath, float scale);
 

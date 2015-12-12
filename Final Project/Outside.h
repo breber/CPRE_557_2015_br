@@ -9,9 +9,7 @@
 
 // local files
 #include "Scene.h"
-
-// course files
-#include "GLObjectObj.h"
+#include "Vehicle.h"
 
 // stdlib
 #include <string>
@@ -19,7 +17,7 @@
 class Outside : public Scene
 {
 public:
-    Outside(GLObjectObj* selectedVehicle);
+    Outside(Vehicle selectedVehicle);
     ~Outside() {};
 
     virtual void init();
@@ -30,5 +28,5 @@ private:
     virtual void initializeLights();
 
     glm::mat4 vehicleMatrix;
-    GLObjectObj* vehicle;
+    Vehicle vehicle;
 };

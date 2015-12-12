@@ -14,13 +14,14 @@
 // glfw includes
 #include <GLFW/glfw3.h>
 
-Outside::Outside(GLObjectObj* selectedVehicle)
+Outside::Outside(Vehicle selectedVehicle)
 : Scene()
 , vehicleMatrix()
 , vehicle(selectedVehicle)
 {
     // Rotate the car model 90 degrees so it faces the right direction
     vehicleMatrix = glm::rotate(static_cast< float >(M_PI / 2.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    vehicleMatrix = vehicleMatrix * glm::scale(glm::vec3(vehicle.objScale, vehicle.objScale, vehicle.objScale));
 }
 
 void Outside::init()
@@ -65,7 +66,7 @@ void Outside::drawScene()
     // TODO: draw race track scene
 
     // Draw the vehicle
-    vehicle->draw();
+    vehicle.object->draw();
 }
 
 void Outside::onKey(int key, int scancode, int action, int mods)
@@ -76,12 +77,12 @@ void Outside::onKey(int key, int scancode, int action, int mods)
     if (key == 87 && (action == GLFW_REPEAT || action == GLFW_PRESS)) // key w
     {
         vehicleMatrix = vehicleMatrix * glm::translate(glm::vec3(0.0f, 0.0f, -delta));
-        vehicle->setMatrix(vehicleMatrix);
+        vehicle.object->setMatrix(vehicleMatrix);
     }
     // Translation (s = backward)
     else if (key == 83 && (action == GLFW_REPEAT || action == GLFW_PRESS)) // key s
     {
         vehicleMatrix = vehicleMatrix * glm::translate(glm::vec3(0.0f, 0.0f, delta));
-        vehicle->setMatrix(vehicleMatrix);
+        vehicle.object->setMatrix(vehicleMatrix);
     }
 }
