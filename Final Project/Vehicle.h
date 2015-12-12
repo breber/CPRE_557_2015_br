@@ -10,6 +10,9 @@
 // local files
 #include "Scene.h"
 
+// course files
+#include "GLObjectObj.h"
+
 // stdlib
 #include <string>
 

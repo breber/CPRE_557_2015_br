@@ -32,10 +32,12 @@ void Garage::init()
 {
     initializeLights();
 
-    // http://tf3dm.com/3d-model/puo-4240-60733.html
-    createCar("flea.obj", 1.0f);
+    // http://tf3dm.com/3d-model/ford-f-150-raptor-34912.html
+    createCar("vehicles/f150.obj", 1.2f);
     // http://tf3dm.com/3d-model/police-car-46912.html
-    createCar("police.obj", 0.02f);
+    createCar("vehicles/police.obj", 0.045f);
+    // http://tf3dm.com/3d-model/aston-martin-vantage-12213.html
+    createCar("vehicles/aston_martin.obj", 0.2f);
 
     initializeGround(glm::vec3(0.5, 0.51, 0.47));
 }
@@ -47,9 +49,9 @@ void Garage::initializeLights()
     GLDirectLightSource* light_source_ptr = new GLDirectLightSource();
     GLDirectLightSource& light_source = *light_source_ptr;
     light_source._lightPos = glm::vec4(0.0, 20.0, 20.0, 0.0);
-    light_source._ambient_intensity = 0.1;
+    light_source._ambient_intensity = 0.01;
     light_source._specular_intensity = 4.5;
-    light_source._diffuse_intensity = 1.0;
+    light_source._diffuse_intensity = 0.5;
     light_source._attenuation_coeff = 0.0;
 
     lights.push_back(light_source_ptr);
@@ -61,7 +63,7 @@ void Garage::initializeLights()
     spotlight_source._specular_intensity = 5.0;
     spotlight_source._diffuse_intensity = 8.0;
     spotlight_source._attenuation_coeff = 0.0002;
-    spotlight_source._cone_direction = glm::vec3(-1.0, -1.0, -1.0);
+    spotlight_source._cone_direction = glm::vec3(0.0, 0.0, -1.0);
     spotlight_source._cone_angle = 20.0;
 
     lights.push_back(selectedVehicleHightlight);
@@ -113,7 +115,7 @@ void Garage::updateCamera()
     float selectedDelta = 0.0f;
 
     // Update the view matrices and determine camera position
-    const int vehicleWidth = 10;
+    const int vehicleWidth = 35;
     const int countVehicles = vehicles.size();
     int index = 0;
     for(std::vector<Vehicle>::iterator vehicleIter = vehicles.begin();
@@ -122,11 +124,14 @@ void Garage::updateCamera()
     {
         // Rotate the car model 90 degrees so it faces the right direction
         glm::mat4 carMatrix = glm::rotate(static_cast< float >(M_PI / 2.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        carMatrix = carMatrix * glm::scale(glm::vec3((*vehicleIter).objScale, (*vehicleIter).objScale, (*vehicleIter).objScale));
 
         // Move it over depending on how many vehicles we have to render
-        const float delta = (countVehicles - index + 1) / 2.0 * vehicleWidth;
+        const float delta = (countVehicles - index - 1) / 2.0 * vehicleWidth;
         carMatrix = carMatrix * glm::translate(glm::vec3(delta, 0.0f, 0.0f));
+
+        // Scale the model by the appropriate value to get them
+        // all appropriately the same size
+        carMatrix = carMatrix * glm::scale(glm::vec3((*vehicleIter).objScale, (*vehicleIter).objScale, (*vehicleIter).objScale));
 
         // Update the model matrix with the newly calculated matrix
         (*vehicleIter).object->setMatrix(carMatrix);
@@ -140,10 +145,11 @@ void Garage::updateCamera()
     }
 
     // Update the highlight to be over the selected vehicle
-    selectedVehicleHightlight->_lightPos = glm::vec4(selectedDelta + 3, 3.0, 5.0, 1.0);
+    selectedVehicleHightlight->_lightPos = glm::vec4(selectedDelta + 1, 3, 28, 1.0);
 
     // Add the camera and a camera delta
-    glm::mat4 camera_transformation = glm::lookAt(glm::vec3(13.0f, 10.0f, 5.0f), glm::vec3(selectedDelta, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    const float cameraDelta = (countVehicles - 1) / 4.0 * vehicleWidth;
+    glm::mat4 camera_transformation = glm::lookAt(glm::vec3(cameraDelta, 30.0f, 5.0f), glm::vec3(selectedDelta, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
     // set the view matrix
     SetViewAsMatrix(camera_transformation);
