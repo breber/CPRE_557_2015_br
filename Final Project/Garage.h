@@ -33,6 +33,5 @@ private:
 
     std::vector<Vehicle> vehicles;
     int selectedVehicleIndex;
-    bool needsUpdate;
     GLSpotLightSource* selectedVehicleHightlight;
 };

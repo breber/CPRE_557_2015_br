@@ -19,7 +19,6 @@ Garage::Garage()
 , vehicles()
 , selectedVehicleIndex(0)
 , selectedVehicleHightlight()
-, needsUpdate(true)
 {
 }
 

@@ -27,6 +27,7 @@ protected:
     void initializeGround(const glm::vec3& groundColor);
     void addLightsToAppearance(GLAppearance& appearance);
 
+    bool needsUpdate;
     std::vector<GLLightSource*> lights;
     std::pair<GLPlane3D, GLAppearance> ground;
 };

@@ -11,6 +11,7 @@
 Scene::Scene()
 : lights()
 , ground(GLPlane3D(0.0, 0.0, 0.0, 500.0, 500.0), GLAppearance("final_project.vs", "single_texture.fs"))
+, needsUpdate(true)
 {
 }
 
