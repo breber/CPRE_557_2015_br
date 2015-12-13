@@ -19,9 +19,6 @@ Outside::Outside(const Vehicle& selectedVehicle)
 , vehicleMatrix()
 , vehicle(selectedVehicle.objPath, selectedVehicle.objScale, "final_project.vs", "single_texture.fs")
 {
-    // Rotate the car model 90 degrees so it faces the right direction
-    vehicleMatrix = glm::rotate(static_cast< float >(M_PI / 2.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    vehicleMatrix = vehicleMatrix * glm::scale(glm::vec3(vehicle.objScale, vehicle.objScale, vehicle.objScale));
 }
 
 Outside::~Outside()
@@ -55,6 +52,11 @@ void Outside::init()
     vehicle.object->setApperance(vehicle.appearance);
     vehicle.object->init();
 
+    // Rotate the car model 90 degrees so it faces the right direction
+    vehicleMatrix = glm::rotate(static_cast< float >(M_PI / 2.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    vehicleMatrix = vehicleMatrix * glm::scale(glm::vec3(vehicle.objScale, vehicle.objScale, vehicle.objScale));
+    vehicle.object->setMatrix(vehicleMatrix);
+
     // Call super class
     initializeGround(glm::vec3(0.0, 0.8, 0.0));
 }
@@ -76,12 +78,28 @@ void Outside::initializeLights()
 
 void Outside::updateCamera()
 {
+    if (!needsUpdate)
+    {
+        return;
+    }
+
     // Add the camera and a camera delta
-    glm::mat4 camera_transformation = glm::lookAt(glm::vec3(0.0f, 5.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    glm::mat4 camera_matrix = camera_transformation * glm::inverse(vehicleMatrix);
+    glm::mat4 camera_matrix =
+        // Look at the vehicle
+        glm::lookAt(glm::vec3(0.0f, 10.0f, -20.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)) *
+        // rotate 180 degrees to look at the back of the vehicle
+        glm::rotate(static_cast< float >(M_PI), glm::vec3(0.0f, 1.0f, 0.0f)) *
+        // scale the camera matrix, since the vehicle matrix has been scaled,
+        // and the scaling will be inverted by glm::inverse
+        glm::scale(glm::vec3(vehicle.objScale, vehicle.objScale, vehicle.objScale)) *
+        // follow the vehicle
+        glm::inverse(vehicleMatrix);
 
     // set the view matrix
     SetViewAsMatrix(camera_matrix);
+
+    // Indicate we don't need an update anymore
+    needsUpdate = false;
 }
 
 void Outside::drawScene()
@@ -103,11 +121,13 @@ void Outside::onKey(int key, int scancode, int action, int mods)
     {
         vehicleMatrix = vehicleMatrix * glm::translate(glm::vec3(0.0f, 0.0f, -delta));
         vehicle.object->setMatrix(vehicleMatrix);
+        needsUpdate = true;
     }
     // Translation (s = backward)
     else if (key == 83 && (action == GLFW_REPEAT || action == GLFW_PRESS)) // key s
     {
         vehicleMatrix = vehicleMatrix * glm::translate(glm::vec3(0.0f, 0.0f, delta));
         vehicle.object->setMatrix(vehicleMatrix);
+        needsUpdate = true;
     }
 }
