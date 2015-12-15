@@ -21,6 +21,7 @@ function(FindByName baseName moduleNames headerNames additionalHeaderPaths addit
         /usr/local/lib
         /sw/lib
         /opt/local/lib
+        ../cmake/lib
         ${additionalLibPaths}
         DOC "The ${baseName} library")
 

@@ -1,6 +1,6 @@
 function(CreateProject name source)
     MESSAGE(STATUS "Source files: " ${source})
-    
+
     project(${name})
 
     include(SetupLibraries)

@@ -2,6 +2,11 @@
 # Brian R., breber@iastate.edu
 # Kyle V., vansicek@iastate.edu
 # Shrabya K., shrabya@iastate.edu
+#
+# Note: to run on windows, you have to ensure that the DLLs are installed or in
+#       the same directory as the exe, and the shaders and vehicles directory
+#       are also in the same directory as the executable.
+#       Maybe we can use cmake's install feature for this...
 
 cmake_minimum_required(VERSION 2.6)
 

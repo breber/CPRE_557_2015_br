@@ -14,6 +14,10 @@
 // glfw includes
 #include <GLFW/glfw3.h>
 
+// std
+#define _USE_MATH_DEFINES // for C++
+#include <math.h>
+
 Garage::Garage()
 : Scene()
 , vehicles()

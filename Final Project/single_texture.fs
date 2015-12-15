@@ -1,4 +1,4 @@
-#version 410 core
+#version 330 core
 
 //  Group:
 //  Brian R., breber@iastate.edu
