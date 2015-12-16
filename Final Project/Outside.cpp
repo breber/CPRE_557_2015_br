@@ -10,6 +10,7 @@
 
 // GLM
 #include <glm/gtx/transform.hpp>
+#include <glm/ext.hpp>
 
 // glfw includes
 #include <GLFW/glfw3.h>
@@ -17,6 +18,9 @@
 // std
 #define _USE_MATH_DEFINES // for C++
 #include <math.h>
+
+// course
+#include "RayIntersectionTest.h"
 
 Outside::Outside(const Vehicle& selectedVehicle)
 : Scene()
@@ -115,14 +119,14 @@ void Outside::updateCamera()
     // Add the camera and a camera delta
     glm::mat4 camera_matrix =
         // Look at the vehicle
-        glm::lookAt(glm::vec3(0.0f, 10.0f, -20.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)) *
+        glm::lookAt(glm::vec3(0.0f, 10.0f, -20.0f), glm::vec3(0.0f, 5.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)) *
         // rotate 180 degrees to look at the back of the vehicle
         glm::rotate(static_cast< float >(M_PI), glm::vec3(0.0f, 1.0f, 0.0f)) *
         // scale the camera matrix, since the vehicle matrix has been scaled,
         // and the scaling will be inverted by glm::inverse
         glm::scale(glm::vec3(vehicle.objScale, vehicle.objScale, vehicle.objScale)) *
         // follow the vehicle
-        glm::inverse(vehicleMatrix);
+        glm::inverse(vehicleMatrixResult);
 
     // set the view matrix
     SetViewAsMatrix(camera_matrix);
@@ -148,14 +152,31 @@ void Outside::onKey(int key, int scancode, int action, int mods)
     if (key == 87 && (action == GLFW_REPEAT || action == GLFW_PRESS)) // key w
     {
         vehicleMatrix = vehicleMatrix * glm::translate(glm::vec3(0.0f, 0.0f, -delta));
-        vehicle.object->setMatrix(vehicleMatrix);
         needsUpdate = true;
     }
     // Translation (s = backward)
     else if (key == 83 && (action == GLFW_REPEAT || action == GLFW_PRESS)) // key s
     {
         vehicleMatrix = vehicleMatrix * glm::translate(glm::vec3(0.0f, 0.0f, delta));
-        vehicle.object->setMatrix(vehicleMatrix);
         needsUpdate = true;
+    }
+
+    if (needsUpdate)
+    {
+        glm::vec3 start(vehicleMatrix[3][0], vehicleMatrix[3][1] + 10, vehicleMatrix[3][2]);
+        glm::vec3 end(vehicleMatrix[3][0], vehicleMatrix[3][1] - 50, vehicleMatrix[3][2]);
+        std::vector<glm::vec3> res;
+        RayIntersectionTest::intersect(start, end, *track, res);
+
+        if (!res.empty())
+        {
+            glm::vec3 position = res[0];
+
+            vehicleMatrixResult = vehicleMatrix;
+            vehicleMatrixResult[3][0] = position[0];
+            vehicleMatrixResult[3][1] = position[1];
+            vehicleMatrixResult[3][2] = position[2];
+            vehicle.object->setMatrix(vehicleMatrixResult);
+        }
     }
 }

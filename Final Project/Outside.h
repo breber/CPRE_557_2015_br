@@ -29,5 +29,6 @@ private:
 
     GLObjectObj* track;
     glm::mat4 vehicleMatrix;
+    glm::mat4 vehicleMatrixResult;
     Vehicle vehicle;
 };

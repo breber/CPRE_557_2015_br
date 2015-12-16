@@ -22,7 +22,7 @@ endforeach(lib)
 # Include files from the class repo
 INCLUDE_DIRECTORIES(${CLASS_SOURCE_PATH})
 
-foreach(f camera.cpp GLAppearance.cpp Shaders.cpp GLSphere.cpp GLObject.cpp GLObjectObj.cpp CoordSystem.cpp controls.cpp Plane3D.cpp HCI557Common.cpp Texture.cpp)
+foreach(f camera.cpp GLAppearance.cpp Shaders.cpp GLSphere.cpp GLObject.cpp GLObjectObj.cpp CoordSystem.cpp controls.cpp Plane3D.cpp HCI557Common.cpp Texture.cpp RayIntersectionTest.cpp)
     file(GLOB TEMP_SOURCE ${CLASS_SOURCE_PATH}/${f})
     LIST(APPEND SOURCE ${TEMP_SOURCE})
 endforeach(f)
