@@ -22,6 +22,7 @@ Outside::Outside(const Vehicle& selectedVehicle)
 : Scene()
 , vehicleMatrix()
 , vehicle(selectedVehicle.objPath, selectedVehicle.objScale, "final_project.vs", "single_texture.fs")
+, track()
 {
 }
 
@@ -33,6 +34,31 @@ Outside::~Outside()
 void Outside::init()
 {
     initializeLights();
+
+    // Track initialization
+    {
+        GLAppearance* appearance = new GLAppearance("final_project.vs", "single_texture.fs");
+        addLightsToAppearance(*appearance);
+
+        GLMaterial* material_ptr = new GLMaterial();
+        GLMaterial& material = *material_ptr;
+        material._diffuse_material = glm::vec3(0.0, 0.0, 1.0);
+        material._ambient_material = glm::vec3(0.0, 0.0, 1.0);
+        material._specular_material = glm::vec3(1.0, 1.0, 1.0);
+        material._shininess = 12.0;
+        material._transparency = 1.0;
+
+        appearance->setMaterial(material);
+        appearance->finalize();
+
+        track = new GLObjectObj("Track&Terrain.obj");
+        track->setApperance(vehicle.appearance);
+        track->init();
+
+        // For now, move the track down to the vehicle's level
+        glm::mat4 trackMatrix = glm::translate(glm::vec3(0.0f, -1117, 0.0f));
+        track->setMatrix(trackMatrix);
+    }
 
     // Add the lights to the car
     addLightsToAppearance(vehicle.appearance);
@@ -56,8 +82,7 @@ void Outside::init()
     vehicle.object->setApperance(vehicle.appearance);
     vehicle.object->init();
 
-    // Rotate the car model 90 degrees so it faces the right direction
-    vehicleMatrix = glm::rotate(static_cast< float >(M_PI / 2.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    // Scale down the car to something reasonable
     vehicleMatrix = vehicleMatrix * glm::scale(glm::vec3(vehicle.objScale, vehicle.objScale, vehicle.objScale));
     vehicle.object->setMatrix(vehicleMatrix);
 
@@ -108,9 +133,8 @@ void Outside::updateCamera()
 
 void Outside::drawScene()
 {
-    Scene::drawScene();
-
-    // TODO: draw race track scene
+    // Draw the track
+    track->draw();
 
     // Draw the vehicle
     vehicle.object->draw();

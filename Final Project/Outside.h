@@ -27,6 +27,7 @@ public:
 private:
     virtual void initializeLights();
 
+    GLObjectObj* track;
     glm::mat4 vehicleMatrix;
     Vehicle vehicle;
 };
