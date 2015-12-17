@@ -17,6 +17,12 @@ void main(void)
 {
     // This function finds the color component for each texture coordinate.
     vec4 tex_color = texture(tex, pass_TexCoord);
-    //color = tex_color;
-    color = pass_Color;
+    if (texture_blend == 0)
+    {
+        color = pass_Color;
+    }
+    else
+    {
+        color = tex_color;
+    }
 }

@@ -30,7 +30,9 @@ public:
 private:
     virtual void initializeLights();
     void createCar(const std::string& objPath, float scale);
+    void initializeWall(const std::string& texturePath);
 
+    std::vector< std::pair<GLObject*, GLAppearance*> > walls;
     std::vector<Vehicle> vehicles;
     int selectedVehicleIndex;
     GLSpotLightSource* selectedVehicleHightlight;

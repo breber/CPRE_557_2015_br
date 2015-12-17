@@ -20,6 +20,7 @@
 
 Garage::Garage()
 : Scene()
+, walls()
 , vehicles()
 , selectedVehicleIndex(0)
 , selectedVehicleHightlight()
@@ -50,6 +51,63 @@ void Garage::init()
     createCar("vehicles/aston_martin.obj", 0.2f);
 
     initializeGround(glm::vec3(0.5, 0.51, 0.47));
+
+    walls.reserve(4);
+
+    // Back wall
+    {
+        initializeWall("wall_shelving.bmp");
+
+        glm::mat4 matrix
+            // Rotate it along X axis to get it upright
+            = glm::rotate(static_cast< float >(M_PI / 2.0f), glm::vec3(1.0f, 0.0f, 0.0f))
+            // move the wall so it is behind the vehicles
+            * glm::translate(glm::vec3(20.0f, 10.0f, 30.0f));
+
+        walls.back().first->setMatrix(matrix);
+    }
+
+    // Right wall
+    {
+        initializeWall("wall_shelving.bmp");
+
+        glm::mat4 matrix
+            // Rotate it along X axis to get it upright
+            = glm::rotate(static_cast< float >(M_PI / 2.0f), glm::vec3(1.0f, 0.0f, 0.0f))
+            // Rotate it along y axis to get it parallel to the cars
+            * glm::rotate(static_cast< float >(M_PI / 2.0f), glm::vec3(0.0f, 1.0f, 0.0f))
+            // move the wall so it is to the right of the vehicles
+            * glm::translate(glm::vec3(0.0f, 10.0f, -10.0f));
+
+        walls.back().first->setMatrix(matrix);
+    }
+
+    // Left wall
+    {
+        initializeWall("wall_shelving.bmp");
+
+        glm::mat4 matrix
+            // Rotate it along X axis to get it upright
+            = glm::rotate(static_cast< float >(M_PI / 2.0f), glm::vec3(1.0f, 0.0f, 0.0f))
+            // Rotate it along y axis to get it parallel to the cars
+            * glm::rotate(static_cast< float >(M_PI / 2.0f), glm::vec3(0.0f, 1.0f, 0.0f))
+            // move the wall so it is to the left of the vehicles
+            * glm::translate(glm::vec3(0.0f, 10.0f, 50.0f));
+
+        walls.back().first->setMatrix(matrix);
+    }
+
+    // Ceiling
+    {
+        initializeWall("ceiling.bmp");
+
+        glm::mat4 matrix
+            // move the ceiling up so it is above the vehicles
+            = glm::translate(glm::vec3(20.0f, 0.0f, 20.0f))
+            * glm::scale(glm::vec3(1.0f, 3.0f, 1.0f));
+
+        walls.back().first->setMatrix(matrix);
+    }
 }
 
 void Garage::initializeLights()
@@ -61,7 +119,7 @@ void Garage::initializeLights()
     light_source._lightPos = glm::vec4(0.0, 20.0, 20.0, 0.0);
     light_source._ambient_intensity = 0.01;
     light_source._specular_intensity = 4.5;
-    light_source._diffuse_intensity = 0.5;
+    light_source._diffuse_intensity = 0.3;
     light_source._attenuation_coeff = 0.0;
 
     lights.push_back(light_source_ptr);
@@ -106,6 +164,42 @@ void Garage::createCar(const std::string& objPath, float scale)
     vehicle.object->init();
 
     vehicles.push_back(vehicle);
+}
+
+void Garage::initializeWall(const std::string& texturePath)
+{
+    walls.push_back(
+        std::make_pair(
+            new GLPlane3D(0.0, 0.0, 0.0, 60.0, 20.0),
+            new GLAppearance("final_project.vs", "single_texture.fs")));
+    GLPlane3D* wall = static_cast<GLPlane3D*>(walls.back().first);
+    GLAppearance* appearance = walls.back().second;
+
+    // Add the lights to the wall
+    addLightsToAppearance(*appearance);
+
+    // Create a material object
+    GLMaterial* material_ptr = new GLMaterial();
+    GLMaterial& material = *material_ptr;
+    material._diffuse_material = glm::vec3(1.0, 0.0, 0.0);
+    material._ambient_material = glm::vec3(1.0, 0.0, 0.0);
+    material._specular_material = glm::vec3(1.0, 1.0, 1.0);
+    material._shininess = 12.0;
+    material._transparency = 1.0;
+
+    // Add the material to the apperance object
+    appearance->setMaterial(material);
+
+    GLTexture* texture = new GLTexture();
+    texture->loadAndCreateTexture(texturePath);
+    texture->setTextureBlendMode(1);
+    appearance->setTexture(texture);
+
+    // Finalize the appearance object
+    appearance->finalize();
+
+    wall->setApperance(*appearance);
+    wall->init();
 }
 
 void Garage::updateCamera()
@@ -167,6 +261,15 @@ void Garage::drawScene()
     ground.second.updateLightSources();
 
     Scene::drawScene();
+
+    for(std::vector< std::pair<GLObject*, GLAppearance*> >::iterator wallIter = walls.begin();
+        wallIter != walls.end();
+        ++wallIter)
+    {
+        // Update the lights and draw
+        (*wallIter).second->updateLightSources();
+        (*wallIter).first->draw();
+    }
 
     // TODO: draw garage scene
 
