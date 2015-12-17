@@ -160,6 +160,18 @@ void Outside::onKey(int key, int scancode, int action, int mods)
         vehicleMatrix = vehicleMatrix * glm::translate(glm::vec3(0.0f, 0.0f, delta));
         needsUpdate = true;
     }
+    // Rotation (a = left)
+    if (key == 65 && (action == GLFW_REPEAT || action == GLFW_PRESS)) // key a
+    {
+        vehicleMatrix = vehicleMatrix * glm::rotate(static_cast< float >(M_PI) / 90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+        needsUpdate = true;
+    }
+    // Rotation (d = right)
+    else if (key == 68 && (action == GLFW_REPEAT || action == GLFW_PRESS)) // key d
+    {
+        vehicleMatrix = vehicleMatrix * glm::rotate(-static_cast< float >(M_PI) / 90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+        needsUpdate = true;
+    }
 
     if (needsUpdate)
     {
