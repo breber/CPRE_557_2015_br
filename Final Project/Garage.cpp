@@ -45,8 +45,8 @@ void Garage::init()
 
     // http://tf3dm.com/3d-model/ford-f-150-raptor-34912.html
     createCar("vehicles/f150.obj", 1.2f);
-    // http://tf3dm.com/3d-model/police-car-46912.html
-    createCar("vehicles/police.obj", 0.045f);
+    // http://tf3dm.com/3d-model/ford-crown-victoria-56264.html
+    createCar("vehicles/crown_victoria.obj", 5.5f);
     // http://tf3dm.com/3d-model/aston-martin-vantage-12213.html
     createCar("vehicles/aston_martin.obj", 0.2f);
 
