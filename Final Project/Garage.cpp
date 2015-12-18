@@ -7,6 +7,7 @@
 //  Shrabya K., shrabya@iastate.edu
 
 #include "Garage.h"
+#include "CustomTexture.h"
 
 // GLM
 #include <glm/gtx/transform.hpp>
@@ -44,11 +45,11 @@ void Garage::init()
     initializeLights();
 
     // http://tf3dm.com/3d-model/ford-f-150-raptor-34912.html
-    createCar("vehicles/f150.obj", 1.2f);
+    createCar("vehicles/f150.obj", 1.2f, glm::vec3(0.55f, 0.83f, 0.75f));
     // http://tf3dm.com/3d-model/ford-crown-victoria-56264.html
-    createCar("vehicles/crown_victoria.obj", 5.5f);
+    createCar("vehicles/crown_victoria.obj", 5.5f, glm::vec3(1.0f, 1.0f, 1.0f));
     // http://tf3dm.com/3d-model/aston-martin-vantage-12213.html
-    createCar("vehicles/aston_martin.obj", 0.2f);
+    createCar("vehicles/aston_martin.obj", 0.2f, glm::vec3(0.537f, 0.839, 0.955f));
 
     initializeGround(glm::vec3(0.5, 0.51, 0.47));
 
@@ -56,7 +57,7 @@ void Garage::init()
 
     // Back wall
     {
-        initializeWall("wall_shelving.bmp");
+        initializeWall("wall_shelving.bmp", GL_TEXTURE2);
 
         glm::mat4 matrix
             // Rotate it along X axis to get it upright
@@ -69,7 +70,7 @@ void Garage::init()
 
     // Right wall
     {
-        initializeWall("wall_shelving.bmp");
+        initializeWall("wall_shelving.bmp", GL_TEXTURE2);
 
         glm::mat4 matrix
             // Rotate it along X axis to get it upright
@@ -84,7 +85,7 @@ void Garage::init()
 
     // Left wall
     {
-        initializeWall("wall_shelving.bmp");
+        initializeWall("wall_shelving.bmp", GL_TEXTURE2);
 
         glm::mat4 matrix
             // Rotate it along X axis to get it upright
@@ -99,7 +100,7 @@ void Garage::init()
 
     // Ceiling
     {
-        initializeWall("ceiling.bmp");
+        initializeWall("ceiling.bmp", GL_TEXTURE3);
 
         glm::mat4 matrix
             // move the ceiling up so it is above the vehicles
@@ -118,7 +119,7 @@ void Garage::initializeLights()
     GLDirectLightSource& light_source = *light_source_ptr;
     light_source._lightPos = glm::vec4(0.0, 20.0, 20.0, 0.0);
     light_source._ambient_intensity = 0.01;
-    light_source._specular_intensity = 4.5;
+    light_source._specular_intensity = 2.0;
     light_source._diffuse_intensity = 0.3;
     light_source._attenuation_coeff = 0.0;
 
@@ -137,7 +138,7 @@ void Garage::initializeLights()
     lights.push_back(selectedVehicleHightlight);
 }
 
-void Garage::createCar(const std::string& objPath, float scale)
+void Garage::createCar(const std::string& objPath, float scale, const glm::vec3& vehicleColor)
 {
     Vehicle vehicle(objPath, scale, "final_project.vs", "single_texture.fs");
 
@@ -147,10 +148,10 @@ void Garage::createCar(const std::string& objPath, float scale)
     // Create a material object
     GLMaterial* material_ptr = new GLMaterial();
     GLMaterial& material = *material_ptr;
-    material._diffuse_material = glm::vec3(0.0, 0.0, 1.0);
-    material._ambient_material = glm::vec3(0.0, 0.0, 1.0);
+    material._diffuse_material = vehicleColor;
+    material._ambient_material = vehicleColor;
     material._specular_material = glm::vec3(1.0, 1.0, 1.0);
-    material._shininess = 12.0;
+    material._shininess = 13.0;
     material._transparency = 1.0;
 
     // Add the material to the apperance object
@@ -166,7 +167,7 @@ void Garage::createCar(const std::string& objPath, float scale)
     vehicles.push_back(vehicle);
 }
 
-void Garage::initializeWall(const std::string& texturePath)
+void Garage::initializeWall(const std::string& texturePath, int activeTexture)
 {
     walls.push_back(
         std::make_pair(
@@ -190,10 +191,10 @@ void Garage::initializeWall(const std::string& texturePath)
     // Add the material to the apperance object
     appearance->setMaterial(material);
 
-    GLTexture* texture = new GLTexture();
-    texture->loadAndCreateTexture(texturePath);
+    CustomTexture* texture = new CustomTexture();
+    texture->loadAndCreateTexture(texturePath, activeTexture);
     texture->setTextureBlendMode(1);
-    appearance->setTexture(texture);
+    texture->addVariablesToProgram(appearance->getProgram(), -1);
 
     // Finalize the appearance object
     appearance->finalize();

@@ -6,12 +6,11 @@
 //  Shrabya K., shrabya@iastate.edu
 
 uniform sampler2D tex;
+uniform int texture_blend;
 
 in vec2 pass_TexCoord;
 in vec4 pass_Color;
 out vec4 color;
-
-uniform int texture_blend;
 
 void main(void)
 {
