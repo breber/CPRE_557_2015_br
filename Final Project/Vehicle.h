@@ -9,9 +9,7 @@
 
 // local files
 #include "Scene.h"
-
-// course files
-#include "GLObjectObj.h"
+#include "VehicleObject.h"
 
 // stdlib
 #include <string>
@@ -27,6 +25,6 @@ public:
 
     std::string objPath;
     float objScale;
-    GLObjectObj* object;
+    VehicleObject* object;
     GLAppearance appearance;
 };

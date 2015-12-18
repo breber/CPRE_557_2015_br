@@ -160,7 +160,7 @@ void Garage::createCar(const std::string& objPath, float scale, const glm::vec3&
     // Finalize the appearance object
     vehicle.appearance.finalize();
 
-    vehicle.object = new GLObjectObj(objPath);
+    vehicle.object = new VehicleObject(objPath);
     vehicle.object->setApperance(vehicle.appearance);
     vehicle.object->init();
 

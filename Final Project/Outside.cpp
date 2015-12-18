@@ -82,7 +82,7 @@ void Outside::init()
     // Finalize the appearance object
     vehicle.appearance.finalize();
 
-    vehicle.object = new GLObjectObj(vehicle.objPath);
+    vehicle.object = new VehicleObject(vehicle.objPath);
     vehicle.object->setApperance(vehicle.appearance);
     vehicle.object->init();
 
@@ -111,10 +111,7 @@ void Outside::initializeLights()
 
 void Outside::updateCamera()
 {
-    if (!needsUpdate)
-    {
-        return;
-    }
+    glm::mat4& modelMatrix = vehicle.object->interpolateMat();
 
     // Add the camera and a camera delta
     glm::mat4 camera_matrix =
@@ -126,13 +123,10 @@ void Outside::updateCamera()
         // and the scaling will be inverted by glm::inverse
         glm::scale(glm::vec3(vehicle.objScale, vehicle.objScale, vehicle.objScale)) *
         // follow the vehicle
-        glm::inverse(vehicleMatrixResult);
+        glm::inverse(modelMatrix);
 
     // set the view matrix
     SetViewAsMatrix(camera_matrix);
-
-    // Indicate we don't need an update anymore
-    needsUpdate = false;
 }
 
 void Outside::drawScene()
@@ -146,31 +140,27 @@ void Outside::drawScene()
 
 void Outside::onKey(int key, int scancode, int action, int mods)
 {
-    const float delta = 1.0f;
+    const float delta = 5.0f;
 
     // Translation (w = forward)
     if (key == 87 && (action == GLFW_REPEAT || action == GLFW_PRESS)) // key w
     {
         vehicleMatrix = vehicleMatrix * glm::translate(glm::vec3(0.0f, 0.0f, -delta));
-        needsUpdate = true;
     }
     // Translation (s = backward)
     else if (key == 83 && (action == GLFW_REPEAT || action == GLFW_PRESS)) // key s
     {
         vehicleMatrix = vehicleMatrix * glm::translate(glm::vec3(0.0f, 0.0f, delta));
-        needsUpdate = true;
     }
     // Rotation (a = left)
     if (key == 65 && (action == GLFW_REPEAT || action == GLFW_PRESS)) // key a
     {
         vehicleMatrix = vehicleMatrix * glm::rotate(static_cast< float >(M_PI) / 90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-        needsUpdate = true;
     }
     // Rotation (d = right)
     else if (key == 68 && (action == GLFW_REPEAT || action == GLFW_PRESS)) // key d
     {
         vehicleMatrix = vehicleMatrix * glm::rotate(-static_cast< float >(M_PI) / 90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-        needsUpdate = true;
     }
 
     if (needsUpdate)
